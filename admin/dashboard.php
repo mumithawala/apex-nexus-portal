@@ -26,7 +26,7 @@ try {
     $userName = $_SESSION['user_name'];
     // Get recent jobs with company names
     $recentJobsStmt = $pdo->query("
-        SELECT j.*, c.name as company_name 
+        SELECT j.*, c.company_name as company_name 
         FROM jobs j 
         LEFT JOIN companies c ON j.company_id = c.id 
         WHERE j.is_deleted = 0 

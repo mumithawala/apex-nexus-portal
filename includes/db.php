@@ -6,7 +6,7 @@
 
 class Database {
     private $host = 'localhost';
-    private $db_name = 'apex-nexus-portal';
+    private $db_name = 'apex-recruit';
     private $username = 'root';
     private $password = '';
     private $charset = 'utf8mb4';

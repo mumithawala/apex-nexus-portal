@@ -17,11 +17,11 @@ try {
     $pdo = $database->getConnection();
     
     $companiesStmt = $pdo->query("
-    SELECT c.id, c.name as company_name, u.name as user_name 
+    SELECT c.id, c.company_name as company_name, u.name as user_name 
     FROM companies c 
     LEFT JOIN users u ON c.user_id = u.id 
     WHERE c.is_deleted = 0
-    ORDER BY c.name ASC
+    ORDER BY c.company_name ASC
 ");
     $companies = $companiesStmt->fetchAll();
     

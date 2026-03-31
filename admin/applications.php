@@ -61,7 +61,7 @@ try {
                j.location as job_location,
                u.name as candidate_name,
                u.email as candidate_email,
-               c.name as company_name
+               c.company_name as company_name
         FROM applications a 
         LEFT JOIN jobs j ON a.job_id = j.id 
         LEFT JOIN candidates cand ON a.candidate_id = cand.id 
@@ -87,31 +87,25 @@ try {
 }
 
 // Include navbar
-require_once '../includes/navbar.php';
+// require_once '../includes/navbar.php';
+require_once '../includes/admin-sidebar.php';
 ?>
 
 <!-- Main Content -->
-<div class="container mx-auto px-4 py-8">
-    <!-- Page Header -->
-    <div class="mb-8">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">All Applications</h1>
-                <p class="text-gray-600 mt-2">Review and manage all job applications</p>
-            </div>
-            <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
-                <?php echo number_format($totalCount); ?> Total
-            </div>
+<div class="lg:pl-64 bg-gray-50 min-h-screen">
+    <!-- Top Header -->
+    <div class="bg-white/80 backdrop-blur-md shadow-sm border-b px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+        <!-- Left Side -->
+        <div>
+            <h1 class="text-lg sm:text-xl font-semibold text-gray-800">All Applications</h1>
+            <p class="text-sm text-gray-500">Review and manage all job applications</p>
         </div>
-    </div>
-
-    <!-- Filters -->
-    <div class="bg-white rounded-lg shadow mb-6 p-4">
-        <form method="GET" class="flex flex-col md:flex-row gap-4">
-            <div class="flex-1">
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        
+        <!-- Right Side -->
+        <div class="flex items-center gap-4">
+            <!-- Notification -->
+            <button class="relative p-2 rounded-full hover:bg-gray-100 transition">
+                🔔
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>

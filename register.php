@@ -10,7 +10,8 @@ require_once 'includes/header.php';
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = clean($_POST['name']);
+    $firstName = clean($_POST['first_name']);
+    $lastName = clean($_POST['last_name']);
     $email = clean($_POST['email']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
@@ -19,8 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validation
     $errors = [];
     
-    if (empty($name)) {
-        $errors[] = "Name is required";
+    if (empty($firstName)) {
+        $errors[] = "First name is required";
+    }
+    if (empty($lastName)) {
+        $errors[] = "Last name is required";
     }
     
     if (empty($email)) {
@@ -60,8 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             
             // Insert user
-            $stmt = $pdo->prepare("INSERT INTO users (role, name, email, password, added_by, created_at, updated_at) VALUES (?, ?, ?, ?, 0, NOW(), NOW())");
-            $stmt->execute([$role, $name, $email, $hashed_password]);
+            $stmt = $pdo->prepare("INSERT INTO users (role, first_name, last_name, email, password, added_by, created_at, updated_at) VALUES (?, ?, ?, ?, ?, 0, NOW(), NOW())");
+            $stmt->execute([$role, $firstName, $lastName, $email, $hashed_password]);
             $user_id = $pdo->lastInsertId();
             
             // Insert role-specific record
@@ -132,10 +136,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="space-y-4">
-                    <!-- Name Input -->
+                    <!-- First Name Input -->
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                            Full Name
+                        <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">
+                            First Name
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -144,12 +148,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </svg>
                             </div>
                             <input 
-                                id="name" 
-                                name="name" 
+                                id="first_name" 
+                                name="first_name" 
                                 type="text" 
                                 required 
                                 class="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" 
-                                placeholder="Enter your full name"
+                                placeholder="Enter your first name"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Last Name Input -->
+                    <div>
+                        <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">
+                            Last Name
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                id="last_name" 
+                                name="last_name" 
+                                type="text" 
+                                required 
+                                class="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" 
+                                placeholder="Enter your last name"
                             >
                         </div>
                     </div>

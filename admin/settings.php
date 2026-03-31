@@ -120,158 +120,185 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     }
 }
 
-// Include navbar
-require_once '../includes/navbar.php';
+// Include navbar and sidebar
+// require_once '../includes/navbar.php';
+require_once '../includes/admin-sidebar.php';
 ?>
 
 <!-- Main Content -->
-<div class="container mx-auto px-4 py-8">
-    <!-- Page Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Settings</h1>
-        <p class="text-gray-600 mt-2">Manage your account settings and preferences</p>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Update Profile Card -->
-        <div class="bg-white rounded-lg shadow">
-            <div class="p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-6">Update Profile</h2>
-                
-                <form method="POST" class="space-y-4">
-                    <input type="hidden" name="update_profile" value="1">
-                    
-                    <!-- Name Field -->
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                            Full Name
-                        </label>
-                        <input 
-                            type="text" 
-                            id="name" 
-                            name="name" 
-                            value="<?php echo htmlspecialchars($admin['name']); ?>"
-                            required
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Enter your full name"
-                        >
-                    </div>
-                    
-                    <!-- Email Field -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                            Email Address
-                        </label>
-                        <input 
-                            type="email" 
-                            id="email" 
-                            name="email" 
-                            value="<?php echo htmlspecialchars($admin['email']); ?>"
-                            required
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Enter your email address"
-                        >
-                    </div>
-                    
-                    <!-- Submit Button -->
-                    <div class="pt-4">
-                        <button 
-                            type="submit" 
-                            class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out"
-                        >
-                            Save Profile Changes
-                        </button>
-                    </div>
-                </form>
-            </div>
+<div class="lg:pl-64 bg-gray-50 min-h-screen">
+    <!-- Top Header -->
+    <div class="bg-white/80 backdrop-blur-md shadow-sm border-b px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+        <!-- Left Side -->
+        <div>
+            <h1 class="text-lg sm:text-xl font-semibold text-gray-800">Settings</h1>
+            <p class="text-sm text-gray-500">Manage your admin account settings</p>
         </div>
+        
+        <!-- Right Side -->
+        <div class="flex items-center gap-4">
+            <!-- Notification -->
+            <button class="relative p-2 rounded-full hover:bg-gray-100 transition">
+                🔔
+                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
 
-        <!-- Change Password Card -->
-        <div class="bg-white rounded-lg shadow">
-            <div class="p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-6">Change Password</h2>
-                
-                <form method="POST" class="space-y-4">
-                    <input type="hidden" name="change_password" value="1">
-                    
-                    <!-- Current Password Field -->
-                    <div>
-                        <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">
-                            Current Password
-                        </label>
-                        <input 
-                            type="password" 
-                            id="current_password" 
-                            name="current_password" 
-                            required
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Enter your current password"
-                        >
-                    </div>
-                    
-                    <!-- New Password Field -->
-                    <div>
-                        <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">
-                            New Password
-                        </label>
-                        <input 
-                            type="password" 
-                            id="new_password" 
-                            name="new_password" 
-                            required
-                            minlength="8"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Enter your new password"
-                        >
-                        <p class="text-xs text-gray-500 mt-1">Password must be at least 8 characters long</p>
-                    </div>
-                    
-                    <!-- Confirm Password Field -->
-                    <div>
-                        <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">
-                            Confirm New Password
-                        </label>
-                        <input 
-                            type="password" 
-                            id="confirm_password" 
-                            name="confirm_password" 
-                            required
-                            minlength="8"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Confirm your new password"
-                        >
-                    </div>
-                    
-                    <!-- Submit Button -->
-                    <div class="pt-4">
-                        <button 
-                            type="submit" 
-                            class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 ease-in-out"
-                        >
-                            Update Password
-                        </button>
-                    </div>
-                </form>
+            <!-- Profile -->
+            <div class="flex items-center gap-3 bg-gray-100 px-3 py-2 rounded-full cursor-pointer hover:bg-gray-200 transition">
+                <!-- Avatar -->
+                <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold">
+                    <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'A', 0, 1)); ?>
+                </div>
+                <!-- Name -->
+                <span class="text-sm font-medium text-gray-700 hidden sm:block">
+                    <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin'); ?>
+                </span>
             </div>
         </div>
     </div>
 
-    <!-- Account Info Card -->
-    <div class="mt-8 bg-white rounded-lg shadow">
-        <div class="p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Account Information</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div>
-                    <p class="text-gray-500">User ID</p>
-                    <p class="font-medium"><?php echo $admin['id']; ?></p>
+    <div class="p-4 sm:p-6 lg:p-8">
+        <div class="max-w-2xl mx-auto">
+            <!-- Update Profile Card -->
+            <div class="bg-white rounded-lg shadow mb-6">
+                <div class="p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Update Profile</h2>
+                    
+                    <form method="POST" class="space-y-4">
+                        <input type="hidden" name="update_profile" value="1">
+                        
+                        <!-- Name Field -->
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                                Full Name
+                            </label>
+                            <input 
+                                type="text" 
+                                id="name" 
+                                name="name" 
+                                value="<?php echo htmlspecialchars($admin['name']); ?>"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Enter your full name"
+                            >
+                        </div>
+                        
+                        <!-- Email Field -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                Email Address
+                            </label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                value="<?php echo htmlspecialchars($admin['email']); ?>"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Enter your email address"
+                            >
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="pt-4">
+                            <button 
+                                type="submit" 
+                                class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+                            >
+                                Save Profile Changes
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div>
-                    <p class="text-gray-500">Account Type</p>
-                    <p class="font-medium">Administrator</p>
+            </div>
+
+            <!-- Change Password Card -->
+            <div class="bg-white rounded-lg shadow mb-6">
+                <div class="p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Change Password</h2>
+                    
+                    <form method="POST" class="space-y-4">
+                        <input type="hidden" name="change_password" value="1">
+                        
+                        <!-- Current Password Field -->
+                        <div>
+                            <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">
+                                Current Password
+                            </label>
+                            <input 
+                                type="password" 
+                                id="current_password" 
+                                name="current_password" 
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Enter your current password"
+                            >
+                        </div>
+                        
+                        <!-- New Password Field -->
+                        <div>
+                            <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">
+                                New Password
+                            </label>
+                            <input 
+                                type="password" 
+                                id="new_password" 
+                                name="new_password" 
+                                required
+                                minlength="8"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Enter your new password"
+                            >
+                            <p class="text-xs text-gray-500 mt-1">Password must be at least 8 characters long</p>
+                        </div>
+                        
+                        <!-- Confirm Password Field -->
+                        <div>
+                            <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">
+                                Confirm New Password
+                            </label>
+                            <input 
+                                type="password" 
+                                id="confirm_password" 
+                                name="confirm_password" 
+                                required
+                                minlength="8"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Confirm your new password"
+                            >
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="pt-4">
+                            <button 
+                                type="submit" 
+                                class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+                            >
+                                Update Password
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div>
-                    <p class="text-gray-500">Member Since</p>
-                    <p class="font-medium"><?php echo formatDate($_SESSION['joined_date'] ?? ''); ?></p>
+            </div>
+
+            <!-- Account Info Card -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Account Information</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div>
+                            <p class="text-gray-500">User ID</p>
+                            <p class="font-medium"><?php echo $admin['id']; ?></p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Account Type</p>
+                            <p class="font-medium">Administrator</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Member Since</p>
+                            <p class="font-medium"><?php echo formatDate($_SESSION['joined_date'] ?? ''); ?></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -18,14 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo = $database->getConnection();
 
         // Fetch user from database
-        $stmt = $pdo->prepare("SELECT id, name, email, password, role FROM users WHERE email = ? AND is_deleted = 0");
+        $stmt = $pdo->prepare("SELECT id, first_name, last_name, email, password, role FROM users WHERE email = ? AND is_deleted = 0");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
         if ($user && password_verify($password, $user['password'])) {
             // Set session variables
             $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_name'] = $user['name'];
+            $_SESSION['user_name'] = ($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '');
             $_SESSION['user_role'] = $user['role'];  // ← match auth.php
             $_SESSION['user_email'] = $user['email'];
 
@@ -56,20 +56,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Redirect if already logged in
-if (isLoggedIn()) {
-    $role = userRole();
+if (isset($_SESSION['user_id'])) {
+    $role = $_SESSION['user_role'] ?? '';
+
     switch ($role) {
         case 'admin':
-            redirect('/apex-nexus-portal/admin/dashboard.php');
-            break;
+            header("Location: /apex-nexus-portal/admin/dashboard.php");
+            exit;
         case 'company':
-            redirect('/apex-nexus-portal/company/dashboard.php');
-            break;
+            header("Location: /apex-nexus-portal/company/dashboard.php");
+            exit;
         case 'candidate':
-            redirect('/apex-nexus-portal/candidate/dashboard.php');
-            break;
+            header("Location: /apex-nexus-portal/candidate/dashboard.php");
+            exit;
         default:
-            redirect('/apex-nexus-portal/index.php');
+            // DO NOTHING (stay on login page)
+            break;
     }
 }
 ?>
