@@ -35,17 +35,7 @@ try {
     ");
     $recentJobs = $recentJobsStmt->fetchAll();
 
-    // Get recent applications with candidate names and job titles
-    $recentApplicationsStmt = $pdo->query("
-        SELECT a.*, cand.name as candidate_name, j.title as job_title 
-        FROM applications a 
-        LEFT JOIN candidates cand ON a.candidate_id = cand.id 
-        LEFT JOIN jobs j ON a.job_id = j.id 
-        WHERE a.is_deleted = 0 
-        ORDER BY a.created_at DESC 
-        LIMIT 5
-    ");
-    $recentApplications = $recentApplicationsStmt->fetchAll();
+
 
 } catch (PDOException $e) {
     error_log("Dashboard error: " . $e->getMessage());
@@ -214,17 +204,7 @@ require_once '../includes/admin-sidebar.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($recentApplications as $app): ?>
-                                <tr class="border-t">
-                                    <td class="px-4 py-2"><?php echo $app['candidate_name']; ?></td>
-                                    <td class="px-4 py-2"><?php echo $app['job_title']; ?></td>
-                                    <td class="px-4 py-2">
-                                        <span class="text-xs px-2 py-1 rounded bg-gray-100">
-                                            <?php echo ucfirst($app['status']); ?>
-                                        </span>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
+                            
                         </tbody>
                     </table>
                 </div>

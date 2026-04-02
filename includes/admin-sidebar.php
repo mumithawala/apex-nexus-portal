@@ -100,18 +100,59 @@ $currentPage = basename($currentPath, '.php');
             <h3 class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Management</h3>
             <div class="space-y-1">
                 <!-- Settings -->
-                <a href="/apex-nexus-portal/admin/settings.php"
-                    class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
-                          <?php echo $currentPage === 'settings' ? 'bg-slate-900 text-white border-l-4 border-blue-500' : 'text-slate-300 hover:bg-slate-700 hover:text-white'; ?>">
-                    <svg class="mr-3 h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                        </path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                    Settings
-                </a>
+                <div>
+                    <button onclick="toggleSettingsSubmenu()" 
+                            class="nav-link group flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-colors w-full
+                                  <?php echo in_array($currentPage, ['settings', 'categories', 'departments']) ? 'bg-slate-900 text-white border-l-4 border-blue-500' : 'text-slate-300 hover:bg-slate-700 hover:text-white'; ?>">
+                        <div class="flex items-center">
+                            <svg class="mr-3 h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Settings
+                        </div>
+                        <svg class="w-4 h-4 transition-transform" id="settings-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Settings Submenu -->
+                    <div id="settings-submenu" class="ml-6 mt-1 space-y-1 hidden">
+                        <!-- Main Settings -->
+                        <a href="/apex-nexus-portal/admin/settings.php"
+                            class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
+                                  <?php echo $currentPage === 'settings' ? 'bg-slate-800 text-white border-l-2 border-blue-400' : 'text-slate-400 hover:bg-slate-800 hover:text-white'; ?>">
+                            <svg class="mr-3 h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            General Settings
+                        </a>
+                        
+                        <!-- Categories -->
+                        <a href="/apex-nexus-portal/admin/categories.php"
+                            class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
+                                  <?php echo $currentPage === 'categories' ? 'bg-slate-800 text-white border-l-2 border-blue-400' : 'text-slate-400 hover:bg-slate-800 hover:text-white'; ?>">
+                            <svg class="mr-3 h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                          Categories
+                        </a>
+                        
+                        <!-- Departments -->
+                        <a href="/apex-nexus-portal/admin/departments.php"
+                            class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
+                                  <?php echo $currentPage === 'departments' ? 'bg-slate-800 text-white border-l-2 border-blue-400' : 'text-slate-400 hover:bg-slate-800 hover:text-white'; ?>">
+                            <svg class="mr-3 h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                           Departments
+                        </a>
+                    </div>
+                </div>
 
                 <!-- My Profile -->
                 <a href="/apex-nexus-portal/admin/profile.php"
@@ -162,3 +203,30 @@ $currentPage = basename($currentPath, '.php');
 
 <!-- Mobile sidebar overlay -->
 <div id="mobile-sidebar-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-50 hidden lg:hidden"></div>
+
+<!-- Settings Submenu Toggle Script -->
+<script>
+function toggleSettingsSubmenu() {
+    const submenu = document.getElementById('settings-submenu');
+    const chevron = document.getElementById('settings-chevron');
+    
+    if (submenu.classList.contains('hidden')) {
+        submenu.classList.remove('hidden');
+        chevron.style.transform = 'rotate(90deg)';
+    } else {
+        submenu.classList.add('hidden');
+        chevron.style.transform = 'rotate(0deg)';
+    }
+}
+
+// Auto-expand submenu if current page is in settings section
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPage = '<?php echo $currentPage ?? ""; ?>';
+    if (['settings', 'categories', 'departments'].includes(currentPage)) {
+        const submenu = document.getElementById('settings-submenu');
+        const chevron = document.getElementById('settings-chevron');
+        submenu.classList.remove('hidden');
+        chevron.style.transform = 'rotate(90deg)';
+    }
+});
+</script>
