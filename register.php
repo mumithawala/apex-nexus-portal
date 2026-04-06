@@ -47,6 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Please select a role";
     }
     
+    // Additional validation for company role
+    if ($role === 'company') {
+        $company_name = clean($_POST['company_name'] ?? '');
+        if (empty($company_name)) {
+            $errors[] = "Company name is required";
+        }
+    }
+    
     if (empty($errors)) {
         try {
             $database = new Database();
@@ -70,8 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Insert role-specific record
             if ($role === 'company') {
-                $stmt = $pdo->prepare("INSERT INTO companies (user_id, created_at, updated_at) VALUES (?, NOW(), NOW())");
-                $stmt->execute([$user_id]);
+                $stmt = $pdo->prepare("INSERT INTO companies (user_id, company_name, created_at, updated_at) VALUES (?, ?, NOW(), NOW())");
+                $stmt->execute([$user_id, $company_name]);
             } elseif ($role === 'candidate') {
                 $stmt = $pdo->prepare("INSERT INTO candidates (user_id, created_at, updated_at) VALUES (?, NOW(), NOW())");
                 $stmt->execute([$user_id]);
@@ -135,7 +143,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
+
+
                 <div class="space-y-4">
+
+                <div id="company_name_field" class="hidden">
+                        <label for="company_name" class="block text-sm font-medium text-gray-700 mb-2">
+                            Company Name
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                id="company_name" 
+                                name="company_name" 
+                                type="text" 
+                                class="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" 
+                                placeholder="Enter your company name"
+                            >
+                        </div>
+                    </div>
                     <!-- First Name Input -->
                     <div>
                         <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">
@@ -179,6 +209,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             >
                         </div>
                     </div>
+
+                    <!-- Company Name Input (shown only for company role) -->
+                    
 
                     <!-- Email Input -->
                     <div>
@@ -310,8 +343,16 @@ function selectRole(role) {
     selectedCard.classList.remove('border-gray-200');
     selectedCard.classList.add('border-blue-500', 'bg-blue-50');
     
-    // Check the radio button
+    // Check radio button
     document.getElementById(`role-${role}`).checked = true;
+    
+    // Show/hide company name field based on role
+    const companyField = document.getElementById('company_name_field');
+    if (role === 'company') {
+        companyField.classList.remove('hidden');
+    } else {
+        companyField.classList.add('hidden');
+    }
 }
 
 // Password visibility toggle

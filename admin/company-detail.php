@@ -25,7 +25,7 @@ try {
     
     // Fetch company details with user info
     $companyStmt = $pdo->prepare("
-        SELECT c.*, u.name as user_name, u.email as user_email, u.created_at as joined_date
+        SELECT c.*, CONCAT(u.first_name, ' ', u.last_name) as user_name, u.email as user_email, u.created_at as joined_date
         FROM companies c 
         LEFT JOIN users u ON c.user_id = u.id 
         WHERE c.id = ? AND c.is_deleted = 0 AND u.is_deleted = 0
