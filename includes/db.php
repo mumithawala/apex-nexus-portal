@@ -1,14 +1,22 @@
 <?php
 /**
  * Database connection using PDO
- * Connects to MySQL database named "recruitment"
+ * Supports both local and live database configurations
  */
 
 class Database {
+    // Live Database Credentials (Currently Active)
+    // private $host = 'localhost';
+    // private $db_name = 'u976011089_apex_nexus_app';
+    // private $username = 'u976011089_apex_nexus_app';
+    // private $password = '=Y9nwbZ@lu';
+    
+    // Local Database Credentials (Commented out for local use)
     private $host = 'localhost';
     private $db_name = 'apex-recruit';
     private $username = 'root';
     private $password = '';
+    
     private $charset = 'utf8mb4';
     private $pdo;
 

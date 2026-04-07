@@ -14,12 +14,12 @@
 
             <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center font-medium space-x-8">
+                <!-- home -->
+                <a href="/apex-nexus-portal/" class="text-gray-300 hover:text-white transition-colors duration-200">Home</a>
+                <a href="about.php" class="text-gray-300 hover:text-white transition-colors duration-200">About</a>
                 <a href="#features" class="text-gray-300 hover:text-white transition-colors duration-200">Features</a>
                 <a href="#how-it-works" class="text-gray-300 hover:text-white transition-colors duration-200">How It Works</a>
                 <a href="#global-features" class="text-gray-300 hover:text-white transition-colors duration-200">Global</a>
-                <a href="#usa-recruitment" class="text-gray-300 hover:text-white transition-colors duration-200">USA</a>
-                <a href="#international-companies" class="text-gray-300 hover:text-white transition-colors duration-200">Companies</a>
-                <a href="about.php" class="text-gray-300 hover:text-white transition-colors duration-200">About</a>
                 <a href="contact.php" class="text-gray-300 hover:text-white transition-colors duration-200">Contact</a>
             </div>
 
@@ -54,11 +54,10 @@
     <!-- Mobile menu -->
     <div id="mobile-menu" class="hidden md:hidden bg-gray-800 border-t border-gray-700">
         <div class="px-4 pt-2 pb-3 space-y-1">
+            <a href="/apex-nexus-portal/" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Home</a>
             <a href="#features" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Features</a>
             <a href="#how-it-works" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">How It Works</a>
             <a href="#global-features" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Global</a>
-            <a href="#usa-recruitment" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">USA</a>
-            <a href="#international-companies" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Companies</a>
             <a href="about.php" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">About</a>
             <a href="contact.php" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">Contact</a>
             
