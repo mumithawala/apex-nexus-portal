@@ -4,21 +4,33 @@
  * Supports both local and live database configurations
  */
 
+// Include URL configuration to detect environment
+require_once __DIR__ . '/urls.php';
+
 class Database {
-    // Live Database Credentials (Currently Active)
-    // private $host = 'localhost';
-    // private $db_name = 'u976011089_apex_nexus_app';
-    // private $username = 'u976011089_apex_nexus_app';
-    // private $password = '=Y9nwbZ@lu';
-    
-    // Local Database Credentials (Commented out for local use)
-    private $host = 'localhost';
-    private $db_name = 'apex-recruit';
-    private $username = 'root';
-    private $password = '';
-    
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
     private $charset = 'utf8mb4';
     private $pdo;
+
+    public function __construct() {
+        // Set database credentials based on environment
+        if ($GLOBALS['is_local']) {
+            // Local Database Credentials
+            $this->host = 'localhost';
+            $this->db_name = 'apex-recruit';
+            $this->username = 'root';
+            $this->password = '';
+        } else {
+            // Live Database Credentials
+            $this->host = 'localhost'; // Update with your live host
+            $this->db_name = 'u976011089_apex_nexus_app';
+            $this->username = 'u976011089_apex_nexus_app';
+            $this->password = '=Y9nwbZ@lu';
+        }
+    }
 
     public function getConnection() {
         $this->pdo = null;
@@ -39,7 +51,11 @@ class Database {
             error_log("Database Connection Error: " . $exception->getMessage());
             
             // In production, you might want to show a generic error message
-            die("Database connection failed. Please try again later.");
+            if ($GLOBALS['is_local']) {
+                die("Local Database Connection Failed: " . $exception->getMessage());
+            } else {
+                die("Database connection failed. Please try again later.");
+            }
         }
 
         return $this->pdo;

@@ -5,6 +5,7 @@
 
 // Include header
 require_once '../includes/header.php';
+require_once '../includes/urls.php';
 
 // Protect page - admin only
 requireRole('admin');
@@ -31,12 +32,12 @@ if ($isEdit && $categoryId > 0) {
         
         if (!$category) {
             setFlash('error', 'Category not found');
-            redirect('/apex-nexus-portal/admin/add-category.php');
+            redirect('categories.php');
         }
     } catch (PDOException $e) {
         error_log("Category fetch error: " . $e->getMessage());
         setFlash('error', 'Failed to load category data');
-        redirect('/apex-nexus-portal/admin/add-category.php');
+        redirect('categories.php');
     }
 }
 
@@ -82,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_category'])) {
             }
             
             setFlash('success', $successMessage);
-            redirect('/apex-nexus-portal/admin/add-category.php');
+            redirect('categories.php');
             
         } catch (PDOException $e) {
             error_log("Category " . ($isEdit ? "update" : "insert") . " error: " . $e->getMessage());
@@ -92,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_category'])) {
 }
 
 require_once '../includes/admin-sidebar.php';
+
 ?>
 
 <!-- Main Content -->

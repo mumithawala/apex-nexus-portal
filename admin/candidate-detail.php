@@ -15,7 +15,7 @@ requireRole('admin');
 $candidateId = (int)($_GET['id'] ?? 0);
 if ($candidateId <= 0) {
     setFlash('error', 'Invalid candidate ID');
-    redirect('/apex-nexus-portal/admin/candidates.php');
+    redirect('admin/candidates.php');
 }
 
 // Fetch candidate details and applications
@@ -35,7 +35,7 @@ try {
     
     if (!$candidate) {
         setFlash('error', 'Candidate not found');
-        redirect('/apex-nexus-portal/admin/candidates.php');
+        redirect('admin/candidates.php');
     }
     
     // Fetch candidate applications
@@ -53,12 +53,14 @@ try {
 } catch (PDOException $e) {
     error_log("Candidate detail error: " . $e->getMessage());
     setFlash('error', 'Failed to load candidate details');
-    redirect('/apex-nexus-portal/admin/candidates.php');
+    redirect($ADMIN_URL . '/candidates.php');
 }
 
 // Include navbar and sidebar
-// require_once '../includes/navbar.php';
-require_once '../includes/admin-sidebar.php';
+// require_once '../includes/auth.php';
+
+require_once '../includes/urls.php';
+require_once '../includes/admin-sidebar.php'
 ?>
 
 <!-- Main Content -->
@@ -96,7 +98,7 @@ require_once '../includes/admin-sidebar.php';
     <div class="p-4 sm:p-6 lg:p-8">
         <!-- Back Button -->
         <div class="mb-6">
-            <a href="/apex-nexus-portal/admin/candidates.php" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+            <a href="<?php echo $ADMIN_URL; ?>/candidates.php" class="inline-flex items-center text-blue-600 hover:text-blue-800">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
@@ -161,7 +163,7 @@ require_once '../includes/admin-sidebar.php';
                         <!-- Resume Download -->
                         <?php if (!empty($candidate['resume']) && $candidate['resume'] !== 'N/A'): ?>
                             <div class="mb-4">
-                                <a href="/apex-nexus-portal/assets/uploads/resumes/<?php echo htmlspecialchars($candidate['resume']); ?>" 
+                                <a href="<?php echo $UPLOADS_URL; ?>/resumes/<?php echo htmlspecialchars($candidate['resume']); ?>" 
                                    target="_blank" 
                                    class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

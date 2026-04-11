@@ -15,7 +15,7 @@ requireRole('admin');
 $companyId = (int)($_GET['id'] ?? 0);
 if ($companyId <= 0) {
     setFlash('error', 'Invalid company ID');
-    redirect('/apex-nexus-portal/admin/companies.php');
+    redirect('admin/companies.php');
 }
 
 // Fetch company details and jobs
@@ -35,7 +35,7 @@ try {
     
     if (!$company) {
         setFlash('error', 'Company not found');
-        redirect('/apex-nexus-portal/admin/companies.php');
+        redirect('admin/companies.php');
     }
     
     // Fetch company jobs
@@ -56,11 +56,13 @@ try {
 } catch (PDOException $e) {
     error_log("Company detail error: " . $e->getMessage());
     setFlash('error', 'Failed to load company details');
-    redirect('/apex-nexus-portal/admin/companies.php');
+    redirect($ADMIN_URL . '/companies.php');
 }
 
 // Include navbar and sidebar
-// require_once '../includes/navbar.php';
+// require_once '../includes/auth.php';
+
+require_once '../includes/urls.php';
 require_once '../includes/admin-sidebar.php';
 ?>
 
@@ -99,7 +101,7 @@ require_once '../includes/admin-sidebar.php';
     <div class="p-4 sm:p-6 lg:p-8">
         <!-- Back Button -->
         <div class="mb-6">
-            <a href="/apex-nexus-portal/admin/companies.php" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+            <a href="<?php echo $ADMIN_URL; ?>/companies.php" class="inline-flex items-center text-blue-600 hover:text-blue-800">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
@@ -114,7 +116,7 @@ require_once '../includes/admin-sidebar.php';
                     <!-- Company Logo/Avatar -->
                     <div class="flex-shrink-0 mb-4 md:mb-0">
                         <?php if (!empty($company['logo'])): ?>
-                            <img src="/apex-nexus-portal/assets/uploads/logos/<?php echo htmlspecialchars($company['logo']); ?>" 
+                            <img src="<?php echo $UPLOADS_URL; ?>/logos/<?php echo htmlspecialchars($company['logo']); ?>" 
                                  alt="<?php echo htmlspecialchars($company['company_name']); ?>"
                                  class="h-24 w-24 rounded-lg object-cover">
                         <?php else: ?>

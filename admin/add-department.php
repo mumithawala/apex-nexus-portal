@@ -7,6 +7,7 @@ $pageTitle = "Add Department - Admin";
 
 // Include header
 require_once '../includes/header.php';
+require_once '../includes/urls.php';
 
 // Protect page - admin only
 requireRole('admin');
@@ -33,12 +34,12 @@ if ($isEdit && $departmentId > 0) {
         
         if (!$department) {
             setFlash('error', 'Department not found');
-            redirect('/apex-nexus-portal/admin/add-department.php');
+            redirect('add-department.php');
         }
     } catch (PDOException $e) {
         error_log("Department fetch error: " . $e->getMessage());
         setFlash('error', 'Failed to load department data');
-        redirect('/apex-nexus-portal/admin/add-department.php');
+        redirect('add-department.php');
     }
 }
 
@@ -83,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_department'])) {
             }
             
             setFlash('success', $successMessage);
-            redirect('/apex-nexus-portal/admin/departments.php');
+            redirect('departments.php');
             
         } catch (PDOException $e) {
             error_log("Department " . ($isEdit ? "update" : "insert") . " error: " . $e->getMessage());
@@ -94,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_department'])) {
 
 // require_once '../includes/navbar.php';
 require_once '../includes/admin-sidebar.php';
+
 ?>
 
 <!-- Main Content -->

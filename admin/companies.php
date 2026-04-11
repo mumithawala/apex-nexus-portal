@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
     }
     
-    redirect('/apex-nexus-portal/admin/companies.php');
+    redirect('admin/companies.php');
 }
 
 // Fetch companies with search
@@ -93,7 +93,9 @@ try {
 }
 
 // Include navbar and sidebar
-// require_once '../includes/navbar.php';
+// require_once '../includes/auth.php';
+
+require_once '../includes/urls.php';
 require_once '../includes/admin-sidebar.php';
 ?>
 
@@ -160,12 +162,12 @@ require_once '../includes/admin-sidebar.php';
               
                 
                 <?php if (!empty($search)): ?>
-                    <a href="/apex-nexus-portal/admin/companies.php" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                    <a href="<?php echo $ADMIN_URL; ?>/companies.php" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
                         Clear
                     </a>
                 <?php endif; ?>
 
-                <a href="/apex-nexus-portal/admin/add-company.php" class=" gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                <a href="<?php echo $ADMIN_URL; ?>/add-company.php" class=" gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                    
                     Add Company
                 </a>
@@ -224,7 +226,7 @@ require_once '../includes/admin-sidebar.php';
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-2">
                                             <!-- View Button -->
-                                            <a href="/apex-nexus-portal/admin/company-detail.php?id=<?php echo $company['id']; ?>" 
+                                            <a href="<?php echo $ADMIN_URL; ?>/company-detail.php?id=<?php echo $company['id']; ?>" 
                                                class="text-blue-600 hover:text-blue-900 text-sm">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>

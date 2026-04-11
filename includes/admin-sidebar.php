@@ -3,6 +3,9 @@
  * Admin Sidebar Navigation
  */
 
+// Include URL variables
+require_once __DIR__ . '/urls.php';
+
 // Get current page for active state detection
 $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $currentPage = basename($currentPath, '.php');
@@ -34,7 +37,7 @@ $currentPage = basename($currentPath, '.php');
             <h3 class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Main Menu</h3>
             <div class="space-y-1">
                 <!-- Dashboard -->
-                <a href="/apex-nexus-portal/admin/dashboard.php"
+                <a href="<?php echo $ADMIN_URL; ?>/dashboard.php"
                     class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
                           <?php echo $currentPage === 'dashboard' ? 'bg-slate-900 text-white border-l-4 border-blue-500' : 'text-slate-300 hover:bg-slate-700 hover:text-white'; ?>">
                     <svg class="mr-3 h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -46,7 +49,7 @@ $currentPage = basename($currentPath, '.php');
                 </a>
 
                 <!-- Jobs -->
-                <a href="/apex-nexus-portal/admin/jobs.php"
+                <a href="<?php echo $ADMIN_URL; ?>/jobs.php"
                     class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
                           <?php echo $currentPage === 'jobs' ? 'bg-slate-900 text-white border-l-4 border-blue-500' : 'text-slate-300 hover:bg-slate-700 hover:text-white'; ?>">
                     <svg class="mr-3 h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,7 +61,7 @@ $currentPage = basename($currentPath, '.php');
                 </a>
 
                 <!-- Companies -->
-                <a href="/apex-nexus-portal/admin/companies.php"
+                <a href="<?php echo $ADMIN_URL; ?>/companies.php"
                     class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
                           <?php echo $currentPage === 'companies' || $currentPage === 'company-detail' ? 'bg-slate-900 text-white border-l-4 border-blue-500' : 'text-slate-300 hover:bg-slate-700 hover:text-white'; ?>">
                     <svg class="mr-3 h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,7 +73,7 @@ $currentPage = basename($currentPath, '.php');
                 </a>
 
                 <!-- Candidates -->
-                <a href="/apex-nexus-portal/admin/candidates.php"
+                <a href="<?php echo $ADMIN_URL; ?>/candidates.php"
                     class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
                           <?php echo $currentPage === 'candidates' || $currentPage === 'candidate-detail' ? 'bg-slate-900 text-white border-l-4 border-blue-500' : 'text-slate-300 hover:bg-slate-700 hover:text-white'; ?>">
                     <svg class="mr-3 h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,7 +85,7 @@ $currentPage = basename($currentPath, '.php');
                 </a>
 
                 <!-- Applications -->
-                <a href="/apex-nexus-portal/admin/applications.php"
+                <a href="<?php echo $ADMIN_URL; ?>/applications.php"
                     class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
                           <?php echo $currentPage === 'applications' ? 'bg-slate-900 text-white border-l-4 border-blue-500' : 'text-slate-300 hover:bg-slate-700 hover:text-white'; ?>">
                     <svg class="mr-3 h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,7 +125,7 @@ $currentPage = basename($currentPath, '.php');
                     <!-- Settings Submenu -->
                     <div id="settings-submenu" class="ml-6 mt-1 space-y-1 hidden">
                         <!-- Main Settings -->
-                        <a href="/apex-nexus-portal/admin/settings.php"
+                        <a href="<?php echo $ADMIN_URL; ?>/settings.php"
                             class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
                                   <?php echo $currentPage === 'settings' ? 'bg-slate-800 text-white border-l-2 border-blue-400' : 'text-slate-400 hover:bg-slate-800 hover:text-white'; ?>">
                             <svg class="mr-3 h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,7 +136,7 @@ $currentPage = basename($currentPath, '.php');
                         </a>
                         
                         <!-- Categories -->
-                        <a href="/apex-nexus-portal/admin/categories.php"
+                        <a href="<?php echo $ADMIN_URL; ?>/categories.php"
                             class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
                                   <?php echo $currentPage === 'categories' ? 'bg-slate-800 text-white border-l-2 border-blue-400' : 'text-slate-400 hover:bg-slate-800 hover:text-white'; ?>">
                             <svg class="mr-3 h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -143,7 +146,7 @@ $currentPage = basename($currentPath, '.php');
                         </a>
                         
                         <!-- Departments -->
-                        <a href="/apex-nexus-portal/admin/departments.php"
+                        <a href="<?php echo $ADMIN_URL; ?>/departments.php"
                             class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
                                   <?php echo $currentPage === 'departments' ? 'bg-slate-800 text-white border-l-2 border-blue-400' : 'text-slate-400 hover:bg-slate-800 hover:text-white'; ?>">
                             <svg class="mr-3 h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,7 +158,7 @@ $currentPage = basename($currentPath, '.php');
                 </div>
 
                 <!-- My Profile -->
-                <a href="/apex-nexus-portal/admin/profile.php"
+                <a href="<?php echo $ADMIN_URL; ?>/profile.php"
                     class="nav-link group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
                           <?php echo $currentPage === 'profile' ? 'bg-slate-900 text-white border-l-4 border-blue-500' : 'text-slate-300 hover:bg-slate-700 hover:text-white'; ?>">
                     <svg class="mr-3 h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -188,7 +191,7 @@ $currentPage = basename($currentPath, '.php');
             </div>
         </div>
 
-        <a href="/apex-nexus-portal/logout.php" onclick="return confirm('Are you sure you want to logout?')"
+        <a href="<?php echo $BASE_URL; ?>/logout.php" onclick="return confirm('Are you sure you want to logout?')"
             class="flex items-center px-3 py-2 text-sm font-medium text-slate-300 rounded-lg hover:bg-slate-700 hover:text-white transition-colors">
 
             <svg class="mr-3 h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

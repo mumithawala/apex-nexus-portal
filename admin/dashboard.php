@@ -3,6 +3,8 @@
  * Admin Dashboard
  */
 
+require_once '../includes/urls.php';
+
 $pageTitle = "Admin Dashboard - Recruitment Portal";
 
 // Include header
@@ -158,7 +160,7 @@ require_once '../includes/admin-sidebar.php';
             <div class="bg-white rounded-xl shadow">
                 <div class="flex justify-between items-center px-6 py-4 border-b">
                     <h2 class="font-semibold text-gray-800">Recent Jobs</h2>
-                    <a href="/apex-nexus-portal/admin/jobs.php" class="text-blue-600 text-sm">View All</a>
+                    <a href="<?php echo $ADMIN_URL; ?>/jobs.php" class="text-blue-600 text-sm">View All</a>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -191,7 +193,7 @@ require_once '../includes/admin-sidebar.php';
             <div class="bg-white rounded-xl shadow">
                 <div class="flex justify-between items-center px-6 py-4 border-b">
                     <h2 class="font-semibold text-gray-800">Recent Applications</h2>
-                    <a href="/apex-nexus-portal/admin/applications.php" class="text-blue-600 text-sm">View All</a>
+                    <a href="<?php echo $ADMIN_URL; ?>/applications.php" class="text-blue-600 text-sm">View All</a>
                 </div>
 
                 <div class="overflow-x-auto">

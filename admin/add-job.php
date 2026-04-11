@@ -41,12 +41,12 @@ if ($job_id > 0) {
 
         if (!$job_data) {
             setFlash('error', 'Job not found');
-            redirect('/apex-nexus-portal/admin/jobs.php');
+            redirect('admin/jobs.php');
         }
     } catch (PDOException $e) {
         error_log("Job fetch error: " . $e->getMessage());
         setFlash('error', 'Failed to load job data');
-        redirect('/apex-nexus-portal/admin/jobs.php');
+        redirect('admin/jobs.php');
     }
 }
 
@@ -262,7 +262,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_job'])) {
 
             // print all data 
 
-            redirect('/apex-nexus-portal/admin/jobs.php');
+            redirect('admin/jobs.php');
 
         } catch (PDOException $e) {
             error_log("Job " . ($editing ? "update" : "add") . " error: " . $e->getMessage());

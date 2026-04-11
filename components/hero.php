@@ -1,3 +1,10 @@
+<?php require_once 'includes/urls.php'; ?>
+
+<!-- Environment Indicator (Remove in production) -->
+<div style="position: fixed; top: 10px; right: 10px; z-index: 9999; padding: 8px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; <?php echo $ENVIRONMENT === 'LOCAL' ? 'background: #ff6b6b; color: white;' : 'background: #51cf66; color: white;'; ?>">
+    <?php echo $ENVIRONMENT; ?>
+</div>
+
 <section class="bg-gray-900 min-h-screen flex items-center relative overflow-hidden dot-grid">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -21,10 +28,10 @@
 
                 <!-- CTA Buttons -->
                 <div class="flex flex-col sm:flex-row gap-4 mb-8 delay-3">
-                    <a href="/apex-nexus-portal/register.php" class="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 text-center">
+                    <a href="<?php echo $BASE_URL; ?>/register.php" class="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 text-center">
                         Get Started Free
                     </a>
-                    <a href="/apex-nexus-portal/login.php" class="px-8 py-4 border border-white text-white font-semibold rounded-lg hover:bg-white hover:text-gray-900 transition-all duration-300 text-center">
+                    <a href="<?php echo $BASE_URL; ?>/login.php" class="px-8 py-4 border border-white text-white font-semibold rounded-lg hover:bg-white hover:text-gray-900 transition-all duration-300 text-center">
                         Login to Portal
                     </a>
                 </div>

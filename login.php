@@ -3,6 +3,8 @@
  * Login page for the recruitment portal
  */
 
+require_once 'includes/urls.php';
+
 $pageTitle = "Login - Recruitment Portal";
 
 // Include header
@@ -32,26 +34,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirect based on role
             switch ($user['role']) {
                 case 'admin':
-                    redirect('/apex-nexus-portal/admin/dashboard.php');
+                    redirect($ADMIN_URL . '/dashboard.php');
                     break;
                 case 'company':
-                    redirect('/apex-nexus-portal/company/dashboard.php');
+                    redirect($COMPANY_URL . '/dashboard.php');
                     break;
                 case 'candidate':
-                    redirect('/apex-nexus-portal/candidate/dashboard.php');
+                    redirect($CANDIDATE_URL . '/dashboard.php');
                     break;
                 default:
-                    redirect('/apex-nexus-portal/index.php');
+                    redirect('index.php');
             }
         } else {
             setFlash('error', 'Invalid email or password');
-            redirect('/apex-nexus-portal/login.php');
+            redirect('login.php');
         }
 
     } catch (PDOException $e) {
         error_log("Login error: " . $e->getMessage());
         setFlash('error', 'Login failed. Please try again.');
-        redirect('/apex-nexus-portal/login.php');
+        redirect('login.php');
     }
 }
 
@@ -61,13 +63,13 @@ if (isset($_SESSION['user_id'])) {
 
     switch ($role) {
         case 'admin':
-            header("Location: /apex-nexus-portal/admin/dashboard.php");
+            redirect($ADMIN_URL . '/dashboard.php');
             exit;
         case 'company':
-            header("Location: /apex-nexus-portal/company/dashboard.php");
+            redirect($COMPANY_URL . '/dashboard.php');
             exit;
         case 'candidate':
-            header("Location: /apex-nexus-portal/candidate/dashboard.php");
+            redirect($CANDIDATE_URL . '/dashboard.php');
             exit;
         default:
             // DO NOTHING (stay on login page)
@@ -97,7 +99,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
 
             <!-- Login Form -->
-            <form class="mt-8 space-y-6" action="/apex-nexus-portal/login.php" method="POST">
+            <form class="mt-8 space-y-6" action="<?php echo $BASE_URL; ?>/login.php" method="POST">
                 <div class="space-y-4">
                     <!-- Email Input -->
                     <div>
@@ -165,7 +167,7 @@ if (isset($_SESSION['user_id'])) {
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600">
                     Don't have an account?
-                    <a href="/apex-nexus-portal/register.php" class="font-medium text-blue-600 hover:text-blue-500">
+                    <a href="<?php echo $BASE_URL; ?>/register.php" class="font-medium text-blue-600 hover:text-blue-500">
                         Register here
                     </a>
                 </p>

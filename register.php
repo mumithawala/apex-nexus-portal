@@ -7,6 +7,9 @@ $pageTitle = "Register - Recruitment Portal";
 
 // Include header
 require_once 'includes/header.php';
+require_once 'includes/urls.php';
+
+
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -65,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$email]);
             if ($stmt->fetch()) {
                 setFlash('error', 'Email already exists');
-                redirect('/apex-nexus-portal/register.php');
+                redirect('register.php');
             }
             
             // Hash password
@@ -86,16 +89,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             setFlash('success', 'Registration successful! Please login.');
-            redirect('/apex-nexus-portal/login.php');
+            redirect('login.php');
             
         } catch (PDOException $e) {
             error_log("Registration error: " . $e->getMessage());
             setFlash('error', 'Registration failed. Please try again.');
-            redirect('/apex-nexus-portal/register.php');
+            redirect('register.php');
         }
     } else {
         setFlash('error', implode(', ', $errors));
-        redirect('/apex-nexus-portal/register.php');
+        redirect('register.php');
     }
 }
 ?>
@@ -119,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <!-- Registration Form -->
-            <form class="mt-8 space-y-6" action="/apex-nexus-portal/register.php" method="POST">
+            <form class="mt-8 space-y-6" action="'register.php" method="POST">
                 <!-- Role Selection -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-3">
@@ -320,7 +323,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600">
                     Already have an account? 
-                    <a href="/apex-nexus-portal/login.php" class="font-medium text-blue-600 hover:text-blue-500">
+                    <a href="login.php" class="font-medium text-blue-600 hover:text-blue-500">
                         Sign in here
                     </a>
                 </p>

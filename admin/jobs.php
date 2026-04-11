@@ -60,7 +60,9 @@ $stmt->execute($params);
 $jobs = $stmt->fetchAll();
 $totalCount = count($jobs);
 
-// require_once '../includes/navbar.php';
+// require_once '../includes/auth.php';
+
+require_once '../includes/urls.php';
 require_once '../includes/admin-sidebar.php';
 ?>
 
@@ -140,7 +142,7 @@ require_once '../includes/admin-sidebar.php';
                                 class="px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm font-medium">
                                 Reset
                             </a>
-                            <a href="/apex-nexus-portal/admin/add-job.php"
+                            <a href="<?php echo $ADMIN_URL; ?>/add-job.php"
                                 class="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium flex items-center">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -219,7 +221,7 @@ require_once '../includes/admin-sidebar.php';
 
                             <!-- Action Buttons -->
                             <div class="flex gap-2 pt-4 border-t border-gray-100">
-                                <a href="/apex-nexus-portal/admin/add-job.php?id=<?php echo $job['id']; ?>"
+                                <a href="<?php echo $ADMIN_URL; ?>/add-job.php?id=<?php echo $job['id']; ?>"
                                    class="flex-1 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-sm font-medium text-center">
                                     Edit
                                 </a>
@@ -269,7 +271,7 @@ require_once '../includes/admin-sidebar.php';
                         Get started by adding your first job posting.
                     <?php endif; ?>
                 </p>
-                <a href="/apex-nexus-portal/admin/add-job.php"
+                <a href="<?php echo $ADMIN_URL; ?>/add-job.php"
                     class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium">
                     Add New Job
                 </a>

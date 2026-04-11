@@ -1,6 +1,7 @@
 <?php
 require_once '../includes/auth.php';
 require_once '../includes/candidate-helpers.php';
+require_once '../includes/urls.php';
 requireRole('candidate');
 $pageTitle = "Dashboard - Apex Nexus";
 require_once '../includes/header.php';
@@ -67,14 +68,45 @@ if ($candidateId) {
 }
 
 $completion = calculateProfileCompletion($candidate);
-$greeting = "Good morning";
 $hour = date('H');
-if ($hour >= 12 && $hour < 17) $greeting = "Good afternoon";
-elseif ($hour >= 17) $greeting = "Good evening";
+$dayOfWeek = date('l');
+
+// Dynamic greeting based on time and day
+if ($hour >= 5 && $hour < 12) {
+    $greeting = "Good Morning";
+    $greetingEmoji = "sunrise";
+    $greetingMessage = "Ready to conquer today's opportunities?";
+} elseif ($hour >= 12 && $hour < 17) {
+    $greeting = "Good Afternoon";
+    $greetingEmoji = "sunny";
+    $greetingMessage = "Perfect time to advance your career!";
+} elseif ($hour >= 17 && $hour < 21) {
+    $greeting = "Good Evening";
+    $greetingEmoji = "moon";
+    $greetingMessage = "Wind down and plan your next move!";
+} else {
+    $greeting = "Hello Night Owl";
+    $greetingEmoji = "stars";
+    $greetingMessage = "Late night planning for success!";
+}
+
+// Add day-specific messages
+$dayMessages = [
+    'Monday' => 'New week, new opportunities!',
+    'Tuesday' => 'Keep the momentum going!',
+    'Wednesday' => 'Halfway to success!',
+    'Thursday' => 'Almost there, stay focused!',
+    'Friday' => 'Finish strong and prepare for success!',
+    'Saturday' => 'Weekend research for career growth!',
+    'Sunday' => 'Rest and recharge for the week ahead!'
+];
+
+$dayMessage = $dayMessages[$dayOfWeek] ?? '';
+
 ?>
 
-<link rel="stylesheet" href="/apex-nexus-portal/assets/css/candidate-nav.css">
-<link rel="stylesheet" href="/apex-nexus-portal/assets/css/candidate-modern.css">
+<link rel="stylesheet" href="<?php echo $ASSETS_URL; ?>/css/candidate-nav.css">
+<link rel="stylesheet" href="<?php echo $ASSETS_URL; ?>/css/candidate-modern.css">
 
 <!-- Modern Candidate Navigation -->
 <?php include '../includes/candidate-navbar.php'; ?>
@@ -86,9 +118,88 @@ elseif ($hour >= 17) $greeting = "Good evening";
         <!-- Welcome Section -->
         <section class="welcome-section">
             <div class="welcome-content">
-                <div class="welcome-text">
-                    <h1 class="welcome-title"><?php echo $greeting; ?>, <?php echo htmlspecialchars($candidate['first_name'] ?? 'User'); ?>!</h1>
-                    <p class="welcome-subtitle">Track your job search and career progress</p>
+                <div class="hero-pattern"></div>
+                <div class="hero-orb-1"></div>
+                <div class="hero-orb-2"></div>
+                <div class="welcome-content-inner">
+                    <div class="welcome-text">
+                        <div class="greeting-emoji">
+                            <?php if ($greetingEmoji === 'sunrise'): ?>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v2m0 16v2m4.22-13.22l1.42 1.42M6.36 18.36l1.42-1.42M2 12h2m16 0h2M6.36 5.64l1.42-1.42M17.64 18.36l-1.42-1.42"/>
+                                    <circle cx="12" cy="12" r="5"/>
+                                </svg>
+                            <?php elseif ($greetingEmoji === 'sunny'): ?>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="5"/>
+                                    <path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 1.54l4.24 4.24M1 12h6m6 0h6m-13.22 4.22l4.24 4.24M17.46 17.46l4.24 4.24"/>
+                                </svg>
+                            <?php elseif ($greetingEmoji === 'moon'): ?>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                                </svg>
+                            <?php else: ?>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                            <?php endif; ?>
+                        </div>
+                        <h1 class="welcome-title">
+                            <span class="title-gradient"><?php echo $greeting; ?>,</span>
+                            <br>
+                            <span class="title-highlight"><?php echo htmlspecialchars($candidate['first_name'] ?? 'User'); ?>!</span>
+                        </h1>
+                        <p class="welcome-subtitle"><?php echo $greetingMessage; ?></p>
+                        <?php if (!empty($dayMessage)): ?>
+                            <p class="day-message"><?php echo $dayMessage; ?></p>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="welcome-visual">
+                        <div class="career-icons">
+                            <div class="icon-item floating">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                </svg>
+                                <span>Applications</span>
+                            </div>
+                            <div class="icon-item floating" style="animation-delay: 0.2s;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <span>Profile</span>
+                            </div>
+                            <div class="icon-item floating" style="animation-delay: 0.4s;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21 15 16 10 5 21"/>
+                                </svg>
+                                <span>Jobs</span>
+                            </div>
+                            <div class="icon-item floating" style="animation-delay: 0.6s;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                </svg>
+                                <span>Success</span>
+                            </div>
+                        </div>
+                        <div class="stats-preview">
+                            <div class="mini-stat">
+                                <div class="mini-number"><?php echo $totalApplications; ?></div>
+                                <div class="mini-label">Applied</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-number"><?php echo $statusCounts['shortlisted']; ?></div>
+                                <div class="mini-label">Shortlisted</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-number"><?php echo $completion; ?>%</div>
+                                <div class="mini-label">Profile</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <?php if ($completion < 80): ?>
                     <div class="profile-boost">
@@ -106,7 +217,7 @@ elseif ($hour >= 17) $greeting = "Good evening";
                                 <span class="progress-text"><?php echo $completion; ?>%</span>
                             </div>
                         </div>
-                        <a href="/apex-nexus-portal/candidate/profile.php" class="boost-btn">Complete Now</a>
+                        <a href="<?php echo $CANDIDATE_URL; ?>/profile.php" class="boost-btn">Complete Now</a>
                     </div>
                 <?php endif; ?>
             </div>
@@ -204,7 +315,7 @@ elseif ($hour >= 17) $greeting = "Good evening";
                         <h2>Recent Applications</h2>
                         <p class="section-subtitle">Track your latest job applications</p>
                     </div>
-                    <a href="/apex-nexus-portal/candidate/my-applications.php" class="view-all-btn">View All</a>
+                    <a href="<?php echo $CANDIDATE_URL; ?>/my-applications.php" class="view-all-btn">View All</a>
                 </div>
                 
                 <?php if (empty($recentApplications)): ?>
@@ -216,7 +327,7 @@ elseif ($hour >= 17) $greeting = "Good evening";
                         </div>
                         <h3>No applications yet</h3>
                         <p>Start applying for jobs to see them here</p>
-                        <a href="/apex-nexus-portal/candidate/search-jobs.php" class="action-btn primary">Find Jobs</a>
+                        <a href="<?php echo $CANDIDATE_URL; ?>/search-jobs.php" class="action-btn primary">Find Jobs</a>
                     </div>
                 <?php else: ?>
                     <div class="applications-list">
@@ -240,7 +351,7 @@ elseif ($hour >= 17) $greeting = "Good evening";
                                 </div>
                                 <div class="app-meta">
                                     <span class="app-date">Applied <?php echo timeAgo($app['created_at']); ?></span>
-                                    <a href="/apex-nexus-portal/candidate/job-detail.php?id=<?php echo $app['job_id']; ?>" class="view-btn">View Details</a>
+                                    <a href="<?php echo $CANDIDATE_URL; ?>/job-detail.php?id=<?php echo $app['job_id']; ?>" class="view-btn">View Details</a>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -255,38 +366,72 @@ elseif ($hour >= 17) $greeting = "Good evening";
                         <h2>Recommended for You</h2>
                         <p class="section-subtitle">Jobs matching your profile</p>
                     </div>
-                    <a href="/apex-nexus-portal/candidate/search-jobs.php" class="view-all-btn">Browse All</a>
+                    <a href="<?php echo $CANDIDATE_URL; ?>/search-jobs.php" class="view-all-btn">Browse All</a>
                 </div>
                 
                 <div class="jobs-grid">
                     <?php foreach ($recommendedJobs as $job): ?>
-                        <div class="job-card">
-                            <div class="job-header">
+                        <div class="modern-job-card">
+                            <div class="job-card-header">
                                 <div class="company-logo">
-                                    <?php echo substr(htmlspecialchars($job['company_name']), 0, 2); ?>
+                                    <span class="company-initials"><?php echo substr(htmlspecialchars($job['company_name']), 0, 2); ?></span>
                                 </div>
+
                                 <div class="job-info">
                                     <h3 class="job-title"><?php echo htmlspecialchars($job['title']); ?></h3>
-                                    <p class="company-name"><?php echo htmlspecialchars($job['company_name']); ?></p>
-                                    <p class="location"><?php echo htmlspecialchars($job['company_city'] . ', ' . $job['company_state']); ?></p>
+                                    <div class="company-info">
+                                        <span class="company-name"><?php echo htmlspecialchars($job['company_name']); ?></span>
+                                        <span class="location">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            <?php echo htmlspecialchars($job['company_city'] . ', ' . $job['company_state']); ?>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="job-meta">
+                                    <?php if ($job['salary_visible'] && !empty($job['salary'])): ?>
+                                        <div class="salary"><?php echo htmlspecialchars($job['salary']); ?></div>
+                                    <?php else: ?>
+                                        <div class="salary undisclosed">Salary not disclosed</div>
+                                    <?php endif; ?>
+                                    <div class="posted-date"><?php echo timeAgo($job['created_at']); ?></div>
                                 </div>
                             </div>
-                            
+
                             <div class="job-tags">
-                                <span class="tag"><?php echo htmlspecialchars($job['employment_type']); ?></span>
-                                <span class="tag"><?php echo htmlspecialchars($job['work_mode']); ?></span>
-                                <span class="tag"><?php echo htmlspecialchars($job['experience_required']); ?></span>
+                                <span class="job-tag employment"><?php echo htmlspecialchars($job['employment_type']); ?></span>
+                                <span class="job-tag work-mode"><?php echo htmlspecialchars($job['work_mode']); ?></span>
+                                <span class="job-tag experience"><?php echo htmlspecialchars($job['experience_required']); ?></span>
                             </div>
-                            
-                            <?php if ($job['salary_visible'] && !empty($job['salary'])): ?>
-                                <div class="job-salary">
-                                    <span class="salary-amount"><?php echo htmlspecialchars($job['salary']); ?></span>
-                                </div>
-                            <?php endif; ?>
-                            
-                            <div class="job-footer">
-                                <span class="posted-date">Posted <?php echo timeAgo($job['created_at']); ?></span>
-                                <a href="/apex-nexus-portal/candidate/job-detail.php?id=<?php echo $job['id']; ?>" class="apply-btn">Apply Now</a>
+
+                            <div class="job-description">
+                                <?php echo htmlspecialchars(substr(strip_tags($job['description']), 0, 150)); ?>
+                                <?php if (strlen(strip_tags($job['description'])) > 150): ?>...<?php endif; ?>
+                            </div>
+
+                            <div class="job-actions">
+                                <a href="<?php echo $CANDIDATE_URL; ?>/apply.php?job_id=<?php echo $job['id']; ?>" class="apply-btn">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                                        <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z"></path>
+                                    </svg>
+                                    Apply Now
+                                </a>
+
+                                <a href="<?php echo $CANDIDATE_URL; ?>/job-detail.php?id=<?php echo $job['id']; ?>" class="details-btn">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    View Details
+                                </a>
+
+                                <button class="save-job-btn" onclick="toggleSaveJob(this, <?php echo $job['id']; ?>)">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"></path>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -307,14 +452,14 @@ elseif ($hour >= 17) $greeting = "Good evening";
     </button>
     
     <div id="quickActionsMenu" class="quick-actions-menu hidden">
-        <a href="/apex-nexus-portal/candidate/search-jobs.php" class="quick-action">
+        <a href="<?php echo $CANDIDATE_URL; ?>/search-jobs.php" class="quick-action">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8"/>
                 <path d="m21 21-4.35-4.35"/>
             </svg>
             <span>Search Jobs</span>
         </a>
-        <a href="/apex-nexus-portal/candidate/upload-resume.php" class="quick-action">
+        <a href="<?php echo $CANDIDATE_URL; ?>/upload-resume.php" class="quick-action">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                 <polyline points="17 8 12 3 7 8"/>
@@ -322,7 +467,7 @@ elseif ($hour >= 17) $greeting = "Good evening";
             </svg>
             <span>Upload Resume</span>
         </a>
-        <a href="/apex-nexus-portal/candidate/profile.php" class="quick-action">
+        <a href="<?php echo $CANDIDATE_URL; ?>/profile.php" class="quick-action">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>

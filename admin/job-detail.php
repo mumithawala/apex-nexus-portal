@@ -15,7 +15,7 @@ requireRole('admin');
 $jobId = (int)($_GET['id'] ?? 0);
 if ($jobId <= 0) {
     setFlash('error', 'Invalid job ID');
-    redirect('/apex-nexus-portal/admin/jobs.php');
+    redirect('admin/jobs.php');
 }
 
 // Fetch job details and applications
@@ -35,7 +35,7 @@ try {
     
     if (!$job) {
         setFlash('error', 'Job not found');
-        redirect('/apex-nexus-portal/admin/jobs.php');
+        redirect('admin/jobs.php');
     }
     
     // Fetch job applications
@@ -58,11 +58,12 @@ try {
 } catch (PDOException $e) {
     error_log("Job detail error: " . $e->getMessage());
     setFlash('error', 'Failed to load job details');
-    redirect('/apex-nexus-portal/admin/jobs.php');
+    redirect($ADMIN_URL . '/jobs.php');
 }
 
 // Include navbar and sidebar
-// require_once '../includes/navbar.php';
+
+require_once '../includes/urls.php';
 require_once '../includes/admin-sidebar.php';
 ?>
 
@@ -101,7 +102,7 @@ require_once '../includes/admin-sidebar.php';
     <div class="p-4 sm:p-6 lg:p-8">
         <!-- Back Button -->
         <div class="mb-6">
-            <a href="/apex-nexus-portal/admin/jobs.php" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+            <a href="<?php echo $ADMIN_URL; ?>/jobs.php" class="inline-flex items-center text-blue-600 hover:text-blue-800">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
@@ -240,7 +241,7 @@ require_once '../includes/admin-sidebar.php';
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-2">
                                             <!-- View Button -->
-                                            <a href="/apex-nexus-portal/admin/candidate-detail.php?id=<?php echo $application['candidate_id']; ?>" 
+                                            <a href="<?php echo $ADMIN_URL; ?>/candidate-detail.php?id=<?php echo $application['candidate_id']; ?>" 
                                                class="text-blue-600 hover:text-blue-900 text-sm">
                                                 View Candidate
                                             </a>

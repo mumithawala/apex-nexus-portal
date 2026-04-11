@@ -1,10 +1,9 @@
 <?php
 require_once '../includes/auth.php';
-require_once '../includes/candidate-helpers.php';
 requireRole('candidate');
 $pageTitle = "Job Details - Apex Nexus";
 require_once '../includes/header.php';
-require_once '../includes/navbar.php';
+// require_once '../includes/navbar.php';
 
 // Get current candidate record
 $db = new Database();
@@ -71,235 +70,234 @@ $similarJobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="candidate-layout">
     <div class="layout-container">
         
-        <!-- Job Header -->
-        <div class="bg-white rounded-2xl p-6 mb-6 border border-gray-100">
-            <div class="flex justify-between items-start mb-4">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-800 mb-2"><?php echo htmlspecialchars($job['title']); ?></h1>
-                    <div class="flex items-center gap-4 text-gray-600">
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center">
-                                <span class="text-xs font-medium text-blue-600"><?php echo substr(htmlspecialchars($job['company_name']), 0, 2); ?></span>
-                            </div>
-                            <span class="font-medium"><?php echo htmlspecialchars($job['company_name']); ?></span>
-                <h1 class="text-2xl font-bold text-gray-800 mb-2"><?php echo htmlspecialchars($job['title']); ?></h1>
-                <div class="flex items-center gap-4 text-gray-600">
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center">
-                            <span class="text-xs font-medium text-blue-600"><?php echo substr(htmlspecialchars($job['company_name']), 0, 2); ?></span>
-                        </div>
-                        <span class="font-medium"><?php echo htmlspecialchars($job['company_name']); ?></span>
+        <!-- Job Information Card -->
+        <div class="apply-job-card">
+            <div class="apply-job-header">
+                <div class="apply-company-logo">
+                    <span><?php echo substr(htmlspecialchars($job['company_name']), 0, 2); ?></span>
+                </div>
+                <div class="apply-job-details">
+                    <h1 class="apply-job-title"><?php echo htmlspecialchars($job['title']); ?></h1>
+                    <p class="apply-company-name"><?php echo htmlspecialchars($job['company_name']); ?> · <?php echo htmlspecialchars($job['company_city'] . ', ' . $job['company_state']); ?></p>
+                    <div class="apply-job-meta">
+                        <span class="apply-meta-item"><?php echo htmlspecialchars($job['employment_type']); ?></span>
+                        <span class="apply-meta-item"><?php echo htmlspecialchars($job['work_mode']); ?></span>
+                        <span class="apply-meta-item"><?php echo htmlspecialchars($job['experience_required']); ?></span>
+                        <?php if (!empty($job['deadline'])): ?>
+                            <span class="apply-meta-item deadline">Deadline: <?php echo date('M j, Y', strtotime($job['deadline'])); ?></span>
+                        <?php endif; ?>
                     </div>
-                    <span>·</span>
-                    <span><?php echo htmlspecialchars($job['company_city'] . ', ' . $job['company_state']); ?></span>
                 </div>
             </div>
             
-            <?php if ($alreadyApplied): ?>
-                <div class="bg-green-50 text-green-600 border border-green-200 px-4 py-2 rounded-lg font-medium">
-                    You have already applied for this job ?
-                </div>
-            <?php else: ?>
-                <a href="/apex-nexus-portal/candidate/apply.php?job_id=<?php echo $job['id']; ?>" 
-                   class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                    Apply for this Job
-                </a>
-            <?php endif; ?>
-        </div>
-        
-        <!-- Tags -->
-        <div class="flex flex-wrap gap-2 mb-4">
-            <span class="tag tag-blue"><?php echo htmlspecialchars($job['employment_type']); ?></span>
-            <span class="tag tag-green"><?php echo htmlspecialchars($job['work_mode']); ?></span>
-            <span class="tag"><?php echo htmlspecialchars($job['experience_required']); ?></span>
-            <?php if (!empty($job['deadline'])): ?>
-                <span class="tag bg-amber-50 text-amber-700">Deadline: <?php echo date('M j, Y', strtotime($job['deadline'])); ?></span>
-            <?php endif; ?>
-        </div>
-        
-        <!-- Salary -->
-        <?php if ($job['salary_visible'] && !empty($job['salary'])): ?>
-            <div class="text-lg font-semibold text-gray-800 mb-2">
-                <?php echo htmlspecialchars($job['salary']); ?>
+            <!-- Action Button -->
+            <div class="apply-job-actions">
+                <?php if ($alreadyApplied): ?>
+                    <div class="apply-applied-badge">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        Already Applied
+                    </div>
+                <?php else: ?>
+                    <a href="/apex-nexus-portal/candidate/apply.php?job_id=<?php echo $job['id']; ?>" 
+                       class="apply-apply-btn">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Apply Now
+                    </a>
+                <?php endif; ?>
             </div>
-        <?php else: ?>
-            <div class="text-gray-500 mb-2">Salary not disclosed</div>
+        </div>
+        
+        <!-- Salary Information -->
+        <?php if ($job['salary_visible'] && !empty($job['salary'])): ?>
+            <div class="apply-salary-card">
+                <div class="apply-salary-label">Salary Range</div>
+                <div class="apply-salary-amount"><?php echo htmlspecialchars($job['salary']); ?></div>
+            </div>
         <?php endif; ?>
         
         <!-- Posted Date -->
-        <div class="text-sm text-gray-500">
+        <div class="apply-posted-info">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
             Posted <?php echo timeAgo($job['created_at']); ?>
         </div>
-    </div>
 
-    <!-- Two Column Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- Main Content -->
-        <div class="lg:col-span-2">
-            <div class="bg-white rounded-2xl border border-gray-100">
-                
-                <!-- Tabs -->
-                <div class="border-b border-gray-200">
-                    <nav class="flex -mb-px" aria-label="Tabs">
+        <!-- Main Content Grid -->
+        <div class="apply-detail-grid">
+            
+            <!-- Job Details Section -->
+            <div class="apply-detail-main">
+                <div class="apply-detail-card">
+                    <!-- Modern Tabs -->
+                    <div class="apply-tabs">
                         <button onclick="showTab('overview')" id="tab-overview" 
-                                class="tab-button active py-4 px-6 border-b-2 border-blue-500 font-medium text-sm text-blue-600">
+                                class="apply-tab active">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                            </svg>
                             Overview
                         </button>
                         <button onclick="showTab('requirements')" id="tab-requirements" 
-                                class="tab-button py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                class="apply-tab">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
                             Requirements
                         </button>
                         <button onclick="showTab('responsibilities')" id="tab-responsibilities" 
-                                class="tab-button py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                                class="apply-tab">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A8.937 8.937 0 0112 21a8.937 8.937 0 01-9-8.745M21 12a9 9 0 01-9 9m0-9a9 9 0 00-9 9m9 9v-6m0 0V3m0 6h-6m6 0h6"/>
+                            </svg>
                             Responsibilities
                         </button>
                         <button onclick="showTab('benefits')" id="tab-benefits" 
-                                class="tab-button py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                            Perks & Benefits
+                                class="apply-tab">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+                            </svg>
+                            Benefits
                         </button>
-                    </nav>
+                    </div>
+                    
+                    <!-- Tab Content -->
+                    <div class="apply-tab-content">
+                        <!-- Overview Tab -->
+                        <div id="content-overview" class="apply-tab-panel">
+                            <h3 class="apply-tab-title">Job Overview</h3>
+                            <div class="apply-tab-text">
+                                <?php echo !empty($job['description']) ? nl2br(htmlspecialchars($job['description'])) : '<p class="text-gray-500">No description available.</p>'; ?>
+                            </div>
+                        </div>
+                        
+                        <!-- Requirements Tab -->
+                        <div id="content-requirements" class="apply-tab-panel hidden">
+                            <h3 class="apply-tab-title">Requirements</h3>
+                            <div class="apply-tab-text">
+                                <?php echo !empty($job['requirements']) ? nl2br(htmlspecialchars($job['requirements'])) : '<p class="text-gray-500">No specific requirements listed.</p>'; ?>
+                            </div>
+                        </div>
+                        
+                        <!-- Responsibilities Tab -->
+                        <div id="content-responsibilities" class="apply-tab-panel hidden">
+                            <h3 class="apply-tab-title">Responsibilities</h3>
+                            <div class="apply-tab-text">
+                                <?php echo !empty($job['responsibilities']) ? nl2br(htmlspecialchars($job['responsibilities'])) : '<p class="text-gray-500">No responsibilities listed.</p>'; ?>
+                            </div>
+                        </div>
+                        
+                        <!-- Benefits Tab -->
+                        <div id="content-benefits" class="apply-tab-panel hidden">
+                            <h3 class="apply-tab-title">Perks & Benefits</h3>
+                            <div class="apply-tab-text">
+                                <?php echo !empty($job['perks']) ? nl2br(htmlspecialchars($job['perks'])) : '<p class="text-gray-500">No perks and benefits listed.</p>'; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="apply-detail-sidebar">
+                
+                <!-- Company Information -->
+                <div class="apply-sidebar-card">
+                    <h3 class="apply-sidebar-title">Company Information</h3>
+                    <div class="apply-sidebar-content">
+                        <div class="apply-sidebar-item">
+                            <div class="apply-sidebar-label">Company</div>
+                            <div class="apply-sidebar-value"><?php echo htmlspecialchars($job['company_name']); ?></div>
+                        </div>
+                        <div class="apply-sidebar-item">
+                            <div class="apply-sidebar-label">Location</div>
+                            <div class="apply-sidebar-value"><?php echo htmlspecialchars($job['company_city'] . ', ' . $job['company_state']); ?></div>
+                        </div>
+                        <?php if (!empty($job['company_website'])): ?>
+                            <div class="apply-sidebar-item">
+                                <div class="apply-sidebar-label">Website</div>
+                                <a href="<?php echo htmlspecialchars($job['company_website']); ?>" 
+                                   target="_blank" class="apply-sidebar-link">
+                                    <?php echo htmlspecialchars($job['company_website']); ?>
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 
-                <!-- Tab Content -->
-                <div class="p-6">
-                    <!-- Overview Tab -->
-                    <div id="content-overview" class="tab-content">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Job Overview</h3>
-                        <div class="prose max-w-none text-gray-600">
-                            <?php echo !empty($job['description']) ? nl2br(htmlspecialchars($job['description'])) : '<p class="text-gray-500">No description available.</p>'; ?>
+                <!-- Job Summary -->
+                <div class="apply-sidebar-card">
+                    <h3 class="apply-sidebar-title">Job Summary</h3>
+                    <div class="apply-sidebar-content">
+                        <div class="apply-sidebar-item">
+                            <div class="apply-sidebar-label">Posted</div>
+                            <div class="apply-sidebar-value"><?php echo timeAgo($job['created_at']); ?></div>
                         </div>
-                    </div>
-                    
-                    <!-- Requirements Tab -->
-                    <div id="content-requirements" class="tab-content hidden">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Requirements</h3>
-                        <div class="prose max-w-none text-gray-600">
-                            <?php echo !empty($job['requirements']) ? nl2br(htmlspecialchars($job['requirements'])) : '<p class="text-gray-500">No specific requirements listed.</p>'; ?>
+                        <div class="apply-sidebar-item">
+                            <div class="apply-sidebar-label">Deadline</div>
+                            <div class="apply-sidebar-value">
+                                <?php echo !empty($job['deadline']) ? date('M j, Y', strtotime($job['deadline'])) : 'Open'; ?>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <!-- Responsibilities Tab -->
-                    <div id="content-responsibilities" class="tab-content hidden">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Responsibilities</h3>
-                        <div class="prose max-w-none text-gray-600">
-                            <?php echo !empty($job['responsibilities']) ? nl2br(htmlspecialchars($job['responsibilities'])) : '<p class="text-gray-500">No responsibilities listed.</p>'; ?>
+                        <div class="apply-sidebar-item">
+                            <div class="apply-sidebar-label">Experience</div>
+                            <div class="apply-sidebar-value"><?php echo htmlspecialchars($job['experience_required']); ?></div>
                         </div>
-                    </div>
-                    
-                    <!-- Benefits Tab -->
-                    <div id="content-benefits" class="tab-content hidden">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Perks & Benefits</h3>
-                        <div class="prose max-w-none text-gray-600">
-                            <?php echo !empty($job['perks']) ? nl2br(htmlspecialchars($job['perks'])) : '<p class="text-gray-500">No perks and benefits listed.</p>'; ?>
+                        <div class="apply-sidebar-item">
+                            <div class="apply-sidebar-label">Type</div>
+                            <div class="apply-sidebar-value"><?php echo htmlspecialchars($job['employment_type']); ?></div>
+                        </div>
+                        <div class="apply-sidebar-item">
+                            <div class="apply-sidebar-label">Work Mode</div>
+                            <div class="apply-sidebar-value"><?php echo htmlspecialchars($job['work_mode']); ?></div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Sidebar -->
-        <div class="lg:col-span-1 space-y-6">
-            
-            <!-- Company Info -->
-            <div class="bg-white rounded-2xl p-6 border border-gray-100">
-                <h3 class="font-semibold text-gray-800 mb-4">Company Information</h3>
-                <div class="space-y-3">
-                    <div>
-                        <div class="text-sm text-gray-500">Company Name</div>
-                        <div class="font-medium text-gray-800"><?php echo htmlspecialchars($job['company_name']); ?></div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500">Location</div>
-                        <div class="font-medium text-gray-800"><?php echo htmlspecialchars($job['company_city'] . ', ' . $job['company_state']); ?></div>
-                    </div>
-                    <?php if (!empty($job['company_website'])): ?>
-                        <div>
-                            <div class="text-sm text-gray-500">Website</div>
-                            <a href="<?php echo htmlspecialchars($job['company_website']); ?>" 
-                               target="_blank" class="text-blue-600 hover:text-blue-700 text-sm">
-                                <?php echo htmlspecialchars($job['company_website']); ?>
-                            </a>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-            
-            <!-- Job Summary -->
-            <div class="bg-white rounded-2xl p-6 border border-gray-100">
-                <h3 class="font-semibold text-gray-800 mb-4">Job Summary</h3>
-                <div class="space-y-3">
-                    <div>
-                        <div class="text-sm text-gray-500">Posted</div>
-                        <div class="font-medium text-gray-800"><?php echo timeAgo($job['created_at']); ?></div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500">Deadline</div>
-                        <div class="font-medium text-gray-800">
-                            <?php echo !empty($job['deadline']) ? date('M j, Y', strtotime($job['deadline'])) : 'Open'; ?>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500">Experience Required</div>
-                        <div class="font-medium text-gray-800"><?php echo htmlspecialchars($job['experience_required']); ?></div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500">Employment Type</div>
-                        <div class="font-medium text-gray-800"><?php echo htmlspecialchars($job['employment_type']); ?></div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500">Work Mode</div>
-                        <div class="font-medium text-gray-800"><?php echo htmlspecialchars($job['work_mode']); ?></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Similar Jobs -->
-            <?php if (!empty($similarJobs)): ?>
-                <div class="bg-white rounded-2xl p-6 border border-gray-100">
-                    <h3 class="font-semibold text-gray-800 mb-4">Similar Jobs</h3>
-                    <div class="space-y-4">
-                        <?php foreach ($similarJobs as $similarJob): ?>
-                            <div class="border-b border-gray-100 pb-4 last:border-0">
-                                <h4 class="font-medium text-gray-800 mb-1"><?php echo htmlspecialchars($similarJob['title']); ?></h4>
-                                <div class="text-sm text-gray-600 mb-2">
-                                    <?php echo htmlspecialchars($similarJob['company_name']); ?> 
-                                    <span class="mx-1">·</span>
-                                    <?php echo htmlspecialchars($similarJob['company_city']); ?>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <div class="flex gap-2">
-                                        <span class="tag text-xs"><?php echo htmlspecialchars($similarJob['employment_type']); ?></span>
-                                        <span class="tag text-xs"><?php echo htmlspecialchars($similarJob['work_mode']); ?></span>
+                
+                <!-- Similar Jobs -->
+                <?php if (!empty($similarJobs)): ?>
+                    <div class="apply-sidebar-card">
+                        <h3 class="apply-sidebar-title">Similar Jobs</h3>
+                        <div class="apply-similar-jobs">
+                            <?php foreach ($similarJobs as $similarJob): ?>
+                                <div class="apply-similar-job">
+                                    <h4 class="apply-similar-title"><?php echo htmlspecialchars($similarJob['title']); ?></h4>
+                                    <div class="apply-similar-company">
+                                        <?php echo htmlspecialchars($similarJob['company_name']); ?> · <?php echo htmlspecialchars($similarJob['company_city']); ?>
+                                    </div>
+                                    <div class="apply-similar-meta">
+                                        <span class="apply-similar-tag"><?php echo htmlspecialchars($similarJob['employment_type']); ?></span>
+                                        <span class="apply-similar-tag"><?php echo htmlspecialchars($similarJob['work_mode']); ?></span>
                                     </div>
                                     <a href="/apex-nexus-portal/candidate/job-detail.php?id=<?php echo $similarJob['id']; ?>" 
-                                       class="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                                        View
+                                       class="apply-similar-link">
+                                        View Job
                                     </a>
                                 </div>
-                            </div>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-                </div>
-            <?php endif; ?>
-            
+                <?php endif; ?>
+                
+            </div>
         </div>
     </div>
-
-  </main>
 </div>
 
 <script>
 function showTab(tabName) {
     // Hide all tab contents
-    const contents = document.querySelectorAll('.tab-content');
+    const contents = document.querySelectorAll('.apply-tab-panel');
     contents.forEach(content => content.classList.add('hidden'));
     
     // Remove active class from all tab buttons
-    const buttons = document.querySelectorAll('.tab-button');
+    const buttons = document.querySelectorAll('.apply-tab');
     buttons.forEach(button => {
-        button.classList.remove('active', 'border-blue-500', 'text-blue-600');
-        button.classList.add('border-transparent', 'text-gray-500');
+        button.classList.remove('active');
     });
     
     // Show selected tab content
@@ -307,8 +305,7 @@ function showTab(tabName) {
     
     // Add active class to selected tab button
     const activeButton = document.getElementById('tab-' + tabName);
-    activeButton.classList.add('active', 'border-blue-500', 'text-blue-600');
-    activeButton.classList.remove('border-transparent', 'text-gray-500');
+    activeButton.classList.add('active');
 }
 </script>
 

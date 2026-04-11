@@ -39,12 +39,12 @@ if ($isEdit && $candidateId > 0) {
 
         if (!$candidate) {
             setFlash('error', 'Candidate not found');
-            redirect('/apex-nexus-portal/admin/candidates.php');
+            redirect('admin/candidates.php');
         }
     } catch (PDOException $e) {
         error_log("Candidate fetch error: " . $e->getMessage());
         setFlash('error', 'Failed to load candidate data');
-        redirect('/apex-nexus-portal/admin/candidates.php');
+        redirect('admin/candidates.php');
     }
 }
 
@@ -379,7 +379,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_candidate'])) {
 
             $pdo->commit();
             setFlash('success', $successMessage);
-            redirect('/apex-nexus-portal/admin/candidates.php');
+            redirect('admin/candidates.php');
 
         } catch (PDOException $e) {
             if ($pdo->inTransaction()) {

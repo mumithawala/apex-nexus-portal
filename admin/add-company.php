@@ -33,12 +33,12 @@ if ($isEdit && $companyId > 0) {
         
         if (!$company) {
             setFlash('error', 'Company not found');
-            redirect('/apex-nexus-portal/admin/companies.php');
+            redirect('admin/companies.php');
         }
     } catch (PDOException $e) {
         error_log("Company fetch error: " . $e->getMessage());
         setFlash('error', 'Failed to load company data');
-        redirect('/apex-nexus-portal/admin/companies.php');
+        redirect('admin/companies.php');
     }
 }
 
@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_company'])) {
             
             $pdo->commit();
             setFlash('success', $successMessage);
-            redirect('/apex-nexus-portal/admin/companies.php');
+            redirect('admin/companies.php');
             
         } catch (PDOException $e) {
             $pdo->rollBack();

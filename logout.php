@@ -2,6 +2,9 @@
 // Start session
 session_start();
 
+// Include URLs
+require_once 'includes/urls.php';
+
 // Unset all session variables
 $_SESSION = [];
 
@@ -23,5 +26,5 @@ if (ini_get("session.use_cookies")) {
 }
 
 // Redirect to login page
-header("Location: /apex-nexus-portal/login.php");
+header("Location: " . $BASE_URL . "/login.php");
 exit;

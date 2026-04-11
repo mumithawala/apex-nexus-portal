@@ -22,13 +22,13 @@ try {
     
     if (!$admin) {
         setFlash('error', 'Admin account not found');
-        redirect('/apex-nexus-portal/admin/dashboard.php');
+        redirect('admin/dashboard.php');
     }
     
 } catch (PDOException $e) {
     error_log("Settings fetch error: " . $e->getMessage());
     setFlash('error', 'Failed to load admin data');
-    redirect('/apex-nexus-portal/admin/dashboard.php');
+    redirect('admin/dashboard.php');
 }
 
 // Handle profile update
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
             $_SESSION['user_email'] = $email;
             
             setFlash('success', 'Profile updated successfully');
-            redirect('/apex-nexus-portal/admin/settings.php');
+            redirect('admin/settings.php');
             
         } catch (PDOException $e) {
             error_log("Profile update error: " . $e->getMessage());
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
             $stmt->execute([$hashedPassword, $admin['id']]);
             
             setFlash('success', 'Password changed successfully');
-            redirect('/apex-nexus-portal/admin/settings.php');
+            redirect('admin/settings.php');
             
         } catch (PDOException $e) {
             error_log("Password change error: " . $e->getMessage());
@@ -121,7 +121,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
 }
 
 // Include navbar and sidebar
-// require_once '../includes/navbar.php';
+require_once '../includes/auth.php';
+
+require_once '../includes/urls.php';
 require_once '../includes/admin-sidebar.php';
 ?>
 
