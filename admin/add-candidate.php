@@ -5,6 +5,9 @@
  * Admin Add Candidate Page
  */
 
+// Include URLs
+require_once '../includes/urls.php';
+
 // Include header
 require_once '../includes/header.php';
 
@@ -39,12 +42,12 @@ if ($isEdit && $candidateId > 0) {
 
         if (!$candidate) {
             setFlash('error', 'Candidate not found');
-            redirect('admin/candidates.php');
+            redirect($ADMIN_URL . '/candidates.php');
         }
     } catch (PDOException $e) {
         error_log("Candidate fetch error: " . $e->getMessage());
         setFlash('error', 'Failed to load candidate data');
-        redirect('admin/candidates.php');
+        redirect($ADMIN_URL . '/candidates.php');
     }
 }
 
@@ -379,7 +382,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_candidate'])) {
 
             $pdo->commit();
             setFlash('success', $successMessage);
-            redirect('admin/candidates.php');
+            redirect($ADMIN_URL . '/candidates.php');
 
         } catch (PDOException $e) {
             if ($pdo->inTransaction()) {

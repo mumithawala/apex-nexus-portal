@@ -3,13 +3,11 @@
  * Admin Add Job Page
  */
 
-// Debug: Show request method and POST data at the very top
-error_log("Request method: " . $_SERVER['REQUEST_METHOD']);
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    error_log("POST data received: " . print_r($_POST, true));
-}
 
 $pageTitle = "Add Job - Admin";
+
+// Include URLs
+require_once '../includes/urls.php';
 
 // Include header
 require_once '../includes/header.php';
@@ -41,12 +39,12 @@ if ($job_id > 0) {
 
         if (!$job_data) {
             setFlash('error', 'Job not found');
-            redirect('admin/jobs.php');
+            redirect($ADMIN_URL . '/jobs.php');
         }
     } catch (PDOException $e) {
         error_log("Job fetch error: " . $e->getMessage());
         setFlash('error', 'Failed to load job data');
-        redirect('admin/jobs.php');
+        redirect($ADMIN_URL . '/jobs.php');
     }
 }
 
@@ -262,7 +260,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_job'])) {
 
             // print all data 
 
-            redirect('admin/jobs.php');
+            redirect($ADMIN_URL . '/jobs.php');
 
         } catch (PDOException $e) {
             error_log("Job " . ($editing ? "update" : "add") . " error: " . $e->getMessage());

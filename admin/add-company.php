@@ -3,6 +3,9 @@
  * Admin Add Company Page
  */
 
+// Include URLs
+require_once '../includes/urls.php';
+
 // Include header
 require_once '../includes/header.php';
 
@@ -33,12 +36,12 @@ if ($isEdit && $companyId > 0) {
         
         if (!$company) {
             setFlash('error', 'Company not found');
-            redirect('admin/companies.php');
+            redirect($ADMIN_URL . '/companies.php');
         }
     } catch (PDOException $e) {
         error_log("Company fetch error: " . $e->getMessage());
         setFlash('error', 'Failed to load company data');
-        redirect('admin/companies.php');
+        redirect($ADMIN_URL . '/companies.php');
     }
 }
 
@@ -152,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_company'])) {
             
             $pdo->commit();
             setFlash('success', $successMessage);
-            redirect('admin/companies.php');
+            redirect($ADMIN_URL . '/companies.php');
             
         } catch (PDOException $e) {
             $pdo->rollBack();

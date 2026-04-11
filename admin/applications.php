@@ -5,6 +5,9 @@
 
 $pageTitle = "All Applications - Admin";
 
+// Include URLs
+require_once '../includes/urls.php';
+
 // Include header
 require_once '../includes/header.php';
 
@@ -24,7 +27,7 @@ try {
     $params = [];
     
     if (!empty($search)) {
-        $whereConditions[] = "(u.name LIKE ? OR j.title LIKE ?)";
+        $whereConditions[] = "(cand.full_name LIKE ? OR j.title LIKE ?)";
         $params[] = "%$search%";
         $params[] = "%$search%";
     }
@@ -42,6 +45,7 @@ try {
         FROM applications a 
         LEFT JOIN jobs j ON a.job_id = j.id 
         LEFT JOIN candidates cand ON a.candidate_id = cand.id 
+        LEFT JOIN companies comp ON j.company_id = comp.id 
         LEFT JOIN users u ON cand.user_id = u.id 
         $whereClause
     ";
@@ -59,14 +63,13 @@ try {
         SELECT a.*, 
                j.title as job_title, 
                j.location as job_location,
-               u.name as candidate_name,
-               u.email as candidate_email,
-               c.company_name as company_name
+               cand.full_name as candidate_name,
+               cand.email as candidate_email,
+               comp.company_name as company_name
         FROM applications a 
         LEFT JOIN jobs j ON a.job_id = j.id 
         LEFT JOIN candidates cand ON a.candidate_id = cand.id 
-        LEFT JOIN users u ON cand.user_id = u.id 
-        LEFT JOIN companies c ON j.company_id = c.id 
+        LEFT JOIN companies comp ON j.company_id = comp.id 
         $whereClause 
         ORDER BY a.created_at DESC 
         LIMIT $perPage OFFSET $offset
@@ -105,7 +108,31 @@ require_once '../includes/admin-sidebar.php';
         <div class="flex items-center gap-4">
             <!-- Notification -->
             <button class="relative p-2 rounded-full hover:bg-gray-100 transition">
-                🔔
+                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+            </button>
+
+            <!-- Profile -->
+            <div class="flex items-center gap-3 bg-gray-100 px-3 py-2 rounded-full cursor-pointer hover:bg-gray-200 transition">
+                <!-- Avatar -->
+                <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold">
+                    <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'A', 0, 1)); ?>
+                </div>
+                <!-- Name -->
+                <span class="text-sm font-medium text-gray-700"><?php echo $_SESSION['user_name'] ?? 'Admin'; ?></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="px-4 sm:px-6 lg:px-8 py-6">
+        <form method="GET" class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
@@ -137,7 +164,7 @@ require_once '../includes/admin-sidebar.php';
             </button>
             
             <?php if (!empty($search) || !empty($status)): ?>
-                <a href="/apex-nexus-portal/admin/applications.php" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                <a href="<?php echo $ADMIN_URL; ?>/applications.php" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
                     Clear
                 </a>
             <?php endif; ?>
@@ -202,7 +229,7 @@ require_once '../includes/admin-sidebar.php';
                                     <?php echo formatDate($application['created_at']); ?>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="/apex-nexus-portal/admin/application-detail.php?id=<?php echo $application['id']; ?>" 
+                                    <a href="<?php echo $ADMIN_URL; ?>/application-detail.php?id=<?php echo $application['id']; ?>" 
                                        class="text-blue-600 hover:text-blue-900 text-sm">
                                         View Details
                                     </a>
