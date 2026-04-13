@@ -90,4 +90,13 @@ function getFlash() {
 function isValidEmail($email) {
     return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 }
+
+/**
+ * Check if user has specific role
+ * @param string $role
+ * @return bool
+ */
+function hasRole($role) {
+    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === $role;
+}
 ?>
