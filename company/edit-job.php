@@ -1,8 +1,10 @@
 <?php
+require_once '../includes/auth.php';
+require_once '../includes/company-helpers.php';
+require_once '../includes/urls.php';
+requireRole('company');
 $pageTitle = "Edit Job - Apex Nexus";
 require_once '../includes/header.php';
-requireRole('company');
-require_once '../includes/navbar.php';
 
 $db = new Database();
 $pdo = $db->getConnection();
@@ -124,37 +126,35 @@ try {
 }
 ?>
 
-<link rel="stylesheet" href="/apex-nexus-portal/assets/css/company.css">
+<link rel="stylesheet" href="<?php echo $ASSETS_URL; ?>/css/company-nav.css">
+<link rel="stylesheet" href="<?php echo $ASSETS_URL; ?>/css/company-modern.css">
 
-<div class="flex min-h-screen bg-gray-50">
-  <?php include '../includes/company-sidebar.php'; ?>
-  <main class="flex-1 p-6 lg:p-8">
+<!-- Modern Company Navigation -->
+<?php include '../includes/company-navbar.php'; ?>
+
+<!-- Main Content Area -->
+<div class="company-layout">
+  <div class="layout-container">
     <!-- Header -->
-    <div class="mb-8">
-      <div class="flex justify-between items-center">
-        <div>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Edit Job</h1>
-          <p class="text-gray-600">Update job posting information and requirements.</p>
-        </div>
-        <div class="flex gap-3">
-          <a href="/apex-nexus-portal/company/applicants.php?job_id=<?php echo $jobId; ?>" 
-             class="px-5 py-2.5 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors">
-            View Applicants
-          </a>
-          <a href="/apex-nexus-portal/company/manage-jobs.php" 
-             class="px-5 py-2.5 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors">
-            Cancel
-          </a>
-        </div>
+    <section class="section-header">
+      <div class="section-title">
+        <h1>Edit Job</h1>
+        <p class="section-subtitle">Update job posting information and requirements</p>
       </div>
-    </div>
+      <div class="flex gap-3">
+        <a href="<?php echo $COMPANY_URL; ?>/applicants.php?job_id=<?php echo $jobId; ?>"
+           class="view-all-btn">View Applicants</a>
+        <a href="<?php echo $COMPANY_URL; ?>/manage-jobs.php"
+           class="view-all-btn">Cancel</a>
+      </div>
+    </section>
 
     <!-- Form -->
-    <form method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <form method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-1.25rem">
       <!-- Left Column - Form -->
       <div class="lg:col-span-2">
         <!-- Flowbite Tabs -->
-        <div class="bg-white rounded-2xl border border-gray-100">
+        <div class="jobs-section">
           <div class="border-b border-gray-200">
             <nav class="flex space-x-8 px-6" aria-label="Tabs">
               <button type="button" class="tab-button py-4 px-1 border-b-2 font-medium text-sm border-blue-500 text-blue-600" data-tab="tab1">
@@ -424,7 +424,7 @@ try {
       <!-- Right Column - Preview -->
       <div class="lg:col-span-1">
         <div class="sticky top-24">
-          <div class="bg-white rounded-2xl border-2 border-dashed border-blue-200 p-5">
+          <div class="jobs-section">
             <div class="text-sm font-medium text-blue-600 mb-4">Preview</div>
             
             <div id="jobPreview">
@@ -445,11 +445,11 @@ try {
 
           <!-- Quick Actions -->
           <div class="mt-4 space-y-2">
-            <a href="/apex-nexus-portal/company/applicants.php?job_id=<?php echo $jobId; ?>" 
+            <a href="<?php echo $COMPANY_URL; ?>/applicants.php?job_id=<?php echo $jobId; ?>" 
                class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
               View Applicants
             </a>
-            <a href="/apex-nexus-portal/company/manage-jobs.php" 
+            <a href="<?php echo $COMPANY_URL; ?>/manage-jobs.php" 
                class="block w-full text-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
               Back to Jobs
             </a>
@@ -457,7 +457,7 @@ try {
         </div>
       </div>
     </form>
-  </main>
+  </div>
 </div>
 
 <script>
