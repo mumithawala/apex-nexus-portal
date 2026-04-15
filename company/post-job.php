@@ -5,7 +5,13 @@ require_once '../includes/urls.php';
 requireRole('company');
 $pageTitle = "Post a Job - Apex Nexus";
 require_once '../includes/header.php';
+?>
 
+<!-- Company CSS Imports -->
+<link rel="stylesheet" href="/apex-nexus-portal/assets/css/company-nav.css">
+<link rel="stylesheet" href="/apex-nexus-portal/assets/css/company-modern.css">
+
+<?php
 $db = new Database();
 $pdo = $db->getConnection();
 $userId = $_SESSION['user_id'];
@@ -43,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     salary, salary_min, salary_max, salary_visible, 
                     experience_required, education, openings, deadline, 
                     status, is_deleted, added_by, created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
             ");
             
             $stmt->execute([
@@ -101,407 +107,325 @@ try {
 }
 ?>
 
-<link rel="stylesheet" href="/apex-nexus-portal/assets/css/company.css">
+<!-- Modern Company Navigation -->
+<?php include '../includes/company-navbar.php'; ?>
 
-<div class="flex min-h-screen bg-gray-50">
-  <main class="flex-1 p-6 lg:p-8">
-    <!-- Header -->
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Post a New Job</h1>
-      <p class="text-gray-600">Create a new job posting to attract qualified candidates.</p>
-    </div>
-
-    <!-- Form -->
-    <form method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Left Column - Form -->
-      <div class="lg:col-span-2">
-        <!-- Flowbite Tabs -->
-        <div class="bg-white rounded-2xl border border-gray-100">
-          <div class="border-b border-gray-200">
-            <nav class="flex space-x-8 px-6" aria-label="Tabs">
-              <button type="button" class="tab-button py-4 px-1 border-b-2 font-medium text-sm border-blue-500 text-blue-600" data-tab="tab1">
-                Job Basics
-              </button>
-              <button type="button" class="tab-button py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="tab2">
-                Job Details
-              </button>
-              <button type="button" class="tab-button py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="tab3">
-                Location & Salary
-              </button>
-            </nav>
-          </div>
-
-          <!-- Tab 1: Job Basics -->
-          <div class="tab-content p-6" id="tab1">
-            <div class="space-y-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Job Title *</label>
-                <input type="text" name="title" required
-                       class="search-input"
-                       placeholder="e.g. Senior PHP Developer"
-                       value="<?php echo htmlspecialchars($_POST['title'] ?? ''); ?>">
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
-                  <select name="department_id" class="search-input">
-                    <option value="">Select Department</option>
-                    <?php foreach ($departments as $dept): ?>
-                      <option value="<?php echo $dept['id']; ?>" 
-                              <?php echo (($_POST['department_id'] ?? '') == $dept['id']) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($dept['name']); ?>
-                      </option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                  <select name="category_id" class="search-input">
-                    <option value="">Select Category</option>
-                    <?php foreach ($categories as $cat): ?>
-                      <option value="<?php echo $cat['id']; ?>"
-                              <?php echo (($_POST['category_id'] ?? '') == $cat['id']) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($cat['name']); ?>
-                      </option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Employment Type *</label>
-                  <select name="employment_type" required class="search-input">
-                    <option value="">Select Type</option>
-                    <option value="full-time" <?php echo (($_POST['employment_type'] ?? '') == 'full-time') ? 'selected' : ''; ?>>Full-time</option>
-                    <option value="part-time" <?php echo (($_POST['employment_type'] ?? '') == 'part-time') ? 'selected' : ''; ?>>Part-time</option>
-                    <option value="contract" <?php echo (($_POST['employment_type'] ?? '') == 'contract') ? 'selected' : ''; ?>>Contract</option>
-                    <option value="internship" <?php echo (($_POST['employment_type'] ?? '') == 'internship') ? 'selected' : ''; ?>>Internship</option>
-                    <option value="freelance" <?php echo (($_POST['employment_type'] ?? '') == 'freelance') ? 'selected' : ''; ?>>Freelance</option>
-                    <option value="temporary" <?php echo (($_POST['employment_type'] ?? '') == 'temporary') ? 'selected' : ''; ?>>Temporary</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Work Mode *</label>
-                  <select name="work_mode" required class="search-input">
-                    <option value="">Select Mode</option>
-                    <option value="on-site" <?php echo (($_POST['work_mode'] ?? '') == 'on-site') ? 'selected' : ''; ?>>On-site</option>
-                    <option value="remote" <?php echo (($_POST['work_mode'] ?? '') == 'remote') ? 'selected' : ''; ?>>Remote</option>
-                    <option value="hybrid" <?php echo (($_POST['work_mode'] ?? '') == 'hybrid') ? 'selected' : ''; ?>>Hybrid</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Number of Openings</label>
-                  <input type="number" name="openings" min="1" value="1"
-                         class="search-input">
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Application Deadline</label>
-                  <input type="date" name="deadline"
-                         class="search-input"
-                         value="<?php echo htmlspecialchars($_POST['deadline'] ?? ''); ?>">
-                </div>
-              </div>
-            </div>
-
-            <div class="flex justify-between mt-8">
-              <button type="button" class="tab-nav-prev px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hidden">
-                Previous
-              </button>
-              <button type="button" class="tab-nav-next ml-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" data-next="tab2">
-                Next
-              </button>
-            </div>
-          </div>
-
-          <!-- Tab 2: Job Details -->
-          <div class="tab-content p-6 hidden" id="tab2">
-            <div class="space-y-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Job Description *</label>
-                <textarea name="description" rows="5" required
-                          class="search-input"
-                          placeholder="Describe the role and responsibilities..."><?php echo htmlspecialchars($_POST['description'] ?? ''); ?></textarea>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Key Responsibilities</label>
-                <textarea name="responsibilities" rows="4"
-                          class="search-input"
-                          placeholder="List the key responsibilities for this role..."><?php echo htmlspecialchars($_POST['responsibilities'] ?? ''); ?></textarea>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Requirements *</label>
-                <textarea name="requirements" rows="4" required
-                          class="search-input"
-                          placeholder="Must-have qualifications and skills..."><?php echo htmlspecialchars($_POST['requirements'] ?? ''); ?></textarea>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Nice to Have</label>
-                <textarea name="nice_to_have" rows="4"
-                          class="search-input"
-                          placeholder="Bonus skills that would be great..."><?php echo htmlspecialchars($_POST['nice_to_have'] ?? ''); ?></textarea>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Perks & Benefits</label>
-                <textarea name="perks" rows="4"
-                          class="search-input"
-                          placeholder="What you offer to candidates..."><?php echo htmlspecialchars($_POST['perks'] ?? ''); ?></textarea>
-              </div>
-            </div>
-
-            <div class="flex justify-between mt-8">
-              <button type="button" class="tab-nav-prev px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50" data-prev="tab1">
-                Previous
-              </button>
-              <button type="button" class="tab-nav-next ml-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" data-next="tab3">
-                Next
-              </button>
-            </div>
-          </div>
-
-          <!-- Tab 3: Location & Salary -->
-          <div class="tab-content p-6 hidden" id="tab3">
-            <div class="space-y-6">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">City *</label>
-                  <input type="text" name="city" required
-                         class="search-input"
-                         value="<?php echo htmlspecialchars($_POST['city'] ?? ''); ?>">
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">State</label>
-                  <input type="text" name="state"
-                         class="search-input"
-                         value="<?php echo htmlspecialchars($_POST['state'] ?? ''); ?>">
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Country</label>
-                  <input type="text" name="country" value="India"
-                         class="search-input">
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Location/Area</label>
-                <input type="text" name="location"
-                       class="search-input"
-                       placeholder="e.g. SG Highway, Ahmedabad"
-                       value="<?php echo htmlspecialchars($_POST['location'] ?? ''); ?>">
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Salary Min (Optional)</label>
-                  <input type="text" name="salary_min"
-                           class="search-input"
-                           placeholder="e.g. 500000"
-                           value="<?php echo htmlspecialchars($_POST['salary_min'] ?? ''); ?>">
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Salary Max (Optional)</label>
-                  <input type="text" name="salary_max"
-                           class="search-input"
-                           placeholder="e.g. 800000"
-                           value="<?php echo htmlspecialchars($_POST['salary_max'] ?? ''); ?>">
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Salary Text</label>
-                  <input type="text" name="salary"
-                           class="search-input"
-                           placeholder="e.g. 5-8 LPA"
-                           value="<?php echo htmlspecialchars($_POST['salary'] ?? ''); ?>">
-                </div>
-              </div>
-
-              <div class="flex items-center">
-                <input type="checkbox" name="salary_visible" id="salary_visible" 
-                       <?php echo isset($_POST['salary_visible']) ? 'checked' : ''; ?>>
-                <label for="salary_visible" class="ml-2 text-sm text-gray-700">Show salary to candidates</label>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Experience Required</label>
-                  <input type="text" name="experience_required"
-                           class="search-input"
-                           placeholder="e.g. 3-5 years"
-                           value="<?php echo htmlspecialchars($_POST['experience_required'] ?? ''); ?>">
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Education Required</label>
-                  <input type="text" name="education"
-                           class="search-input"
-                           placeholder="e.g. B.Tech/BE"
-                           value="<?php echo htmlspecialchars($_POST['education'] ?? ''); ?>">
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Apply Email</label>
-                <input type="email" name="apply_email"
-                         class="search-input"
-                         placeholder="applications@company.com"
-                         value="<?php echo htmlspecialchars($company['email'] ?? ''); ?>">
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">External Apply URL (Optional)</label>
-                <input type="url" name="apply_url"
-                         class="search-input"
-                         placeholder="https://careers.company.com"
-                         value="<?php echo htmlspecialchars($_POST['apply_url'] ?? ''); ?>">
-              </div>
-            </div>
-
-            <div class="flex justify-between mt-8">
-              <button type="button" class="tab-nav-prev px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50" data-prev="tab2">
-                Previous
-              </button>
-              <button type="submit" class="ml-auto px-8 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                Post Job
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Column - Preview -->
-      <div class="lg:col-span-1">
-        <div class="sticky top-24">
-          <div class="bg-white rounded-2xl border-2 border-dashed border-blue-200 p-5">
-            <div class="text-sm font-medium text-blue-600 mb-4">Preview</div>
+<div class="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div class="max-w-7xl mx-auto mt-20">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <div id="jobPreview">
-              <h3 class="text-lg font-semibold text-gray-900 mb-2" id="previewTitle">Job Title</h3>
-              
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="tag tag-blue" id="previewType">Employment Type</span>
-                <span class="tag tag-green" id="previewMode">Work Mode</span>
-              </div>
-              
-              <div class="space-y-2 text-sm text-gray-600">
-                <div id="previewLocation">Location</div>
-                <div id="previewSalary">Salary</div>
-                <div id="previewDeadline">Deadline</div>
-              </div>
+            <!-- Left Column - Info Card -->
+            <div class="lg:col-span-1">
+                <div class="bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-2xl p-6 border border-gray-100 shadow-xl backdrop-blur-sm relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"></div>
+                    <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-2xl"></div>
+                    
+                    <div class="relative z-10">
+                        <h2 class="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-4">
+                            Post a New Job
+                        </h2>
+                        <p class="text-gray-600 mb-6">
+                            Create an attractive job posting to find the perfect candidates for your team.
+                        </p>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white/50 backdrop-blur-sm rounded-lg p-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-700">Job Basics</p>
+                                        <p class="text-xs text-gray-500">Title, type, and mode</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white/50 backdrop-blur-sm rounded-lg p-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-700">Job Details</p>
+                                        <p class="text-xs text-gray-500">Description & requirements</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white/50 backdrop-blur-sm rounded-lg p-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-700">Location & Salary</p>
+                                        <p class="text-xs text-gray-500">Location and compensation</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+
+            <!-- Right Column - Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+                    <div class="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-2xl"></div>
+
+                    <!-- Tabs -->
+                    <div class="border-b border-gray-200/50 backdrop-blur-sm relative z-10">
+                        <nav class="flex -mb-px" aria-label="Tabs">
+                            <button onclick="showTab('basics')" id="tab-basics" class="tab-button active py-4 px-6 border-b-2 border-blue-500 font-medium text-sm text-blue-600 bg-gradient-to-r from-blue-50 to-transparent transition-all duration-300 hover:from-blue-100">
+                                <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                </svg>
+                                Job Basics
+                            </button>
+                            <button onclick="showTab('details')" id="tab-details" class="tab-button py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent transition-all duration-300">
+                                <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 8v2M4 4v2M4 4h2m8 0h2M4 4v2m0 0h8m0 0v2m0-2h2m-4 4h-4m-4 0H4m0 0V8m0 0v2m0 0v2m0-2h2m-4 4h-4" clip-rule="evenodd"/>
+                                </svg>
+                                Job Details
+                            </button>
+                            <button onclick="showTab('location')" id="tab-location" class="tab-button py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gradient-to-r hover:from-purple-50 hover:to-transparent transition-all duration-300">
+                                <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                </svg>
+                                Location & Salary
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="p-6 relative z-10">
+                        <form method="POST">
+                            
+                            <!-- Job Basics Tab -->
+                            <div id="content-basics" class="tab-content">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-6">Job Information</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Job Title *</label>
+                                        <input type="text" name="title" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="e.g. Senior PHP Developer" value="<?php echo htmlspecialchars($_POST['title'] ?? ''); ?>">
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                                            <select name="department_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                                <option value="">Select Department</option>
+                                                <?php foreach ($departments as $dept): ?>
+                                                    <option value="<?php echo $dept['id']; ?>" <?php echo (($_POST['department_id'] ?? '') == $dept['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($dept['name']); ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                                            <select name="category_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                                <option value="">Select Category</option>
+                                                <?php foreach ($categories as $cat): ?>
+                                                    <option value="<?php echo $cat['id']; ?>" <?php echo (($_POST['category_id'] ?? '') == $cat['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($cat['name']); ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Employment Type *</label>
+                                            <select name="employment_type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                                <option value="">Select Type</option>
+                                                <option value="full-time" <?php echo (($_POST['employment_type'] ?? '') == 'full-time') ? 'selected' : ''; ?>>Full-time</option>
+                                                <option value="part-time" <?php echo (($_POST['employment_type'] ?? '') == 'part-time') ? 'selected' : ''; ?>>Part-time</option>
+                                                <option value="contract" <?php echo (($_POST['employment_type'] ?? '') == 'contract') ? 'selected' : ''; ?>>Contract</option>
+                                                <option value="internship" <?php echo (($_POST['employment_type'] ?? '') == 'internship') ? 'selected' : ''; ?>>Internship</option>
+                                                <option value="freelance" <?php echo (($_POST['employment_type'] ?? '') == 'freelance') ? 'selected' : ''; ?>>Freelance</option>
+                                                <option value="temporary" <?php echo (($_POST['employment_type'] ?? '') == 'temporary') ? 'selected' : ''; ?>>Temporary</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Work Mode *</label>
+                                            <select name="work_mode" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                                <option value="">Select Mode</option>
+                                                <option value="on-site" <?php echo (($_POST['work_mode'] ?? '') == 'on-site') ? 'selected' : ''; ?>>On-site</option>
+                                                <option value="remote" <?php echo (($_POST['work_mode'] ?? '') == 'remote') ? 'selected' : ''; ?>>Remote</option>
+                                                <option value="hybrid" <?php echo (($_POST['work_mode'] ?? '') == 'hybrid') ? 'selected' : ''; ?>>Hybrid</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Number of Openings</label>
+                                            <input type="number" name="openings" min="1" value="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Application Deadline</label>
+                                            <input type="date" name="deadline" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" value="<?php echo htmlspecialchars($_POST['deadline'] ?? ''); ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 flex justify-end">
+                                    <button type="button" onclick="showTab('details')" class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg">
+                                        Next: Job Details →
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Job Details Tab -->
+                            <div id="content-details" class="tab-content hidden">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-6">Job Description</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Job Description *</label>
+                                        <textarea name="description" rows="5" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Describe the role and responsibilities..."><?php echo htmlspecialchars($_POST['description'] ?? ''); ?></textarea>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Key Responsibilities</label>
+                                        <textarea name="responsibilities" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="List the key responsibilities for this role..."><?php echo htmlspecialchars($_POST['responsibilities'] ?? ''); ?></textarea>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Requirements *</label>
+                                        <textarea name="requirements" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Must-have qualifications and skills..."><?php echo htmlspecialchars($_POST['requirements'] ?? ''); ?></textarea>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Nice to Have</label>
+                                        <textarea name="nice_to_have" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Bonus skills that would be great..."><?php echo htmlspecialchars($_POST['nice_to_have'] ?? ''); ?></textarea>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Perks & Benefits</label>
+                                        <textarea name="perks" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="What you offer to candidates..."><?php echo htmlspecialchars($_POST['perks'] ?? ''); ?></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 flex justify-between">
+                                    <button type="button" onclick="showTab('basics')" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+                                        ← Back
+                                    </button>
+                                    <button type="button" onclick="showTab('location')" class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg">
+                                        Next: Location & Salary →
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Location & Salary Tab -->
+                            <div id="content-location" class="tab-content hidden">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-6">Location & Compensation</h3>
+                                <div class="space-y-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                                            <input type="text" name="city" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" value="<?php echo htmlspecialchars($_POST['city'] ?? ''); ?>">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">State</label>
+                                            <input type="text" name="state" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" value="<?php echo htmlspecialchars($_POST['state'] ?? ''); ?>">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                                            <input type="text" name="country" value="India" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Location/Area</label>
+                                        <input type="text" name="location" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="e.g. SG Highway, Ahmedabad" value="<?php echo htmlspecialchars($_POST['location'] ?? ''); ?>">
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Salary Min (Optional)</label>
+                                            <input type="text" name="salary_min" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="e.g. 500000" value="<?php echo htmlspecialchars($_POST['salary_min'] ?? ''); ?>">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Salary Max (Optional)</label>
+                                            <input type="text" name="salary_max" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="e.g. 800000" value="<?php echo htmlspecialchars($_POST['salary_max'] ?? ''); ?>">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Salary Text</label>
+                                            <input type="text" name="salary" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="e.g. 5-8 LPA" value="<?php echo htmlspecialchars($_POST['salary'] ?? ''); ?>">
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center">
+                                        <input type="checkbox" name="salary_visible" id="salary_visible" <?php echo isset($_POST['salary_visible']) ? 'checked' : ''; ?> class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                        <label for="salary_visible" class="ml-2 text-sm text-gray-700">Show salary to candidates</label>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Experience Required</label>
+                                            <input type="text" name="experience_required" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="e.g. 3-5 years" value="<?php echo htmlspecialchars($_POST['experience_required'] ?? ''); ?>">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Education Required</label>
+                                            <input type="text" name="education" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="e.g. B.Tech/BE" value="<?php echo htmlspecialchars($_POST['education'] ?? ''); ?>">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Apply Email</label>
+                                        <input type="email" name="apply_email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="applications@company.com" value="<?php echo htmlspecialchars($company['email'] ?? ''); ?>">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">External Apply URL (Optional)</label>
+                                        <input type="url" name="apply_url" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="https://careers.company.com" value="<?php echo htmlspecialchars($_POST['apply_url'] ?? ''); ?>">
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 flex justify-between">
+                                    <button type="button" onclick="showTab('details')" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+                                        ← Back
+                                    </button>
+                                    <button type="submit" class="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-300 font-medium shadow-lg">
+                                        Post Job
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </form>
-  </main>
+    </div>
 </div>
 
 <script>
-// Tab navigation
-document.querySelectorAll('.tab-button').forEach(button => {
-  button.addEventListener('click', () => {
-    const targetTab = button.dataset.tab;
-    
-    // Hide all tabs
-    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-    
-    // Show target tab
-    document.getElementById(targetTab).classList.remove('hidden');
-    
-    // Update button states
-    document.querySelectorAll('.tab-button').forEach(btn => {
-      btn.classList.remove('border-blue-500', 'text-blue-600');
-      btn.classList.add('border-transparent', 'text-gray-500');
+function showTab(tabName) {
+    // Hide all tab content
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
     });
-    button.classList.remove('border-transparent', 'text-gray-500');
-    button.classList.add('border-blue-500', 'text-blue-600');
     
-    // Update navigation buttons
-    updateNavButtons(targetTab);
-  });
-});
-
-// Tab navigation buttons
-document.querySelectorAll('.tab-nav-next').forEach(button => {
-  button.addEventListener('click', () => {
-    const nextTab = button.dataset.next;
-    document.querySelector(`[data-tab="${nextTab}"]`).click();
-  });
-});
-
-document.querySelectorAll('.tab-nav-prev').forEach(button => {
-  button.addEventListener('click', () => {
-    const prevTab = button.dataset.prev;
-    document.querySelector(`[data-tab="${prevTab}"]`).click();
-  });
-});
-
-function updateNavButtons(currentTab) {
-  // Hide all nav buttons
-  document.querySelectorAll('.tab-nav-prev, .tab-nav-next').forEach(btn => btn.classList.add('hidden'));
-  
-  // Show appropriate buttons
-  if (currentTab === 'tab1') {
-    document.querySelector('[data-next="tab2"]').classList.remove('hidden');
-  } else if (currentTab === 'tab2') {
-    document.querySelector('[data-prev="tab1"]').classList.remove('hidden');
-    document.querySelector('[data-next="tab3"]').classList.remove('hidden');
-  } else if (currentTab === 'tab3') {
-    document.querySelector('[data-prev="tab2"]').classList.remove('hidden');
-  }
-}
-
-// Live preview update
-function updatePreview() {
-  const title = document.querySelector('[name="title"]').value || 'Job Title';
-  const type = document.querySelector('[name="employment_type"]').value || 'Employment Type';
-  const mode = document.querySelector('[name="work_mode"]').value || 'Work Mode';
-  const city = document.querySelector('[name="city"]').value || 'Location';
-  const salary = document.querySelector('[name="salary"]').value || 'Salary';
-  const deadline = document.querySelector('[name="deadline"]').value || 'Deadline';
-  
-  document.getElementById('previewTitle').textContent = title;
-  document.getElementById('previewType').textContent = type.charAt(0).toUpperCase() + type.slice(1);
-  document.getElementById('previewMode').textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
-  document.getElementById('previewLocation').textContent = city;
-  document.getElementById('previewSalary').textContent = salary || 'Not specified';
-  document.getElementById('previewDeadline').textContent = deadline ? new Date(deadline).toLocaleDateString() : 'Not specified';
-}
-
-// Add event listeners for live preview
-document.querySelectorAll('input, select, textarea').forEach(input => {
-  input.addEventListener('input', updatePreview);
-});
-
-// Initialize preview
-updatePreview();
-</script>
-
-<script>
-function toggleQuickActions() {
-    const menu = document.getElementById('quickActionsMenu');
-    menu.classList.toggle('hidden');
+    // Remove active class from all tab buttons
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active', 'border-blue-500', 'text-blue-600', 'bg-gradient-to-r', 'from-blue-50', 'to-transparent');
+        button.classList.add('border-transparent', 'text-gray-500');
+    });
     
-    if (!menu.classList.contains('hidden')) {
-        setTimeout(() => {
-            document.addEventListener('click', closeQuickActions);
-        }, 100);
-    }
-}
-
-function closeQuickActions(e) {
-    const menu = document.getElementById('quickActionsMenu');
-    const button = document.querySelector('.fab');
+    // Show selected tab content
+    document.getElementById('content-' + tabName).classList.remove('hidden');
     
-    if (!menu.contains(e.target) && !button.contains(e.target)) {
-        menu.classList.add('hidden');
-        document.removeEventListener('click', closeQuickActions);
-    }
+    // Add active class to selected tab button
+    const activeButton = document.getElementById('tab-' + tabName);
+    activeButton.classList.add('active', 'border-blue-500', 'text-blue-600', 'bg-gradient-to-r', 'from-blue-50', 'to-transparent');
+    activeButton.classList.remove('border-transparent', 'text-gray-500');
 }
 </script>
 

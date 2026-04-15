@@ -96,14 +96,14 @@ try {
   $stmt->execute([$companyId]);
   $recentApplications = $stmt->fetchAll();
 
-  // 5. 3 most recent job postings
+  // 5. All active job postings
   $stmt = $pdo->prepare("
         SELECT j.*, COUNT(a.id) as application_count
-        FROM jobs j 
+        FROM jobs j
         LEFT JOIN applications a ON j.id = a.job_id AND a.is_deleted = 0
-        WHERE j.company_id = ? AND j.is_deleted = 0
-        ORDER BY j.created_at DESC 
-        LIMIT 3
+        WHERE j.company_id = ? AND j.is_deleted = 0 AND j.status = 'active'
+        GROUP BY j.id
+        ORDER BY j.created_at DESC
     ");
   $stmt->execute([$companyId]);
   $recentJobs = $stmt->fetchAll();

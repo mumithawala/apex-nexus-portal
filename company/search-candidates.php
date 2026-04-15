@@ -93,19 +93,26 @@ try {
 }
 ?>
 
-<link rel="stylesheet" href="/apex-nexus-portal/assets/css/company.css">
+<link rel="stylesheet" href="<?php echo $ASSETS_URL; ?>/css/company-nav.css">
+<link rel="stylesheet" href="<?php echo $ASSETS_URL; ?>/css/company-modern.css">
 
-<div class="flex min-h-screen bg-gray-50">
-  <main class="flex-1 p-6 lg:p-8">
+<!-- Modern Company Navigation -->
+<?php include '../includes/company-navbar.php'; ?>
+
+<div class="min-h-screen bg-gray-50 p-6 lg:p-8 mt-20">
+  <div class="max-w-7xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Search Candidate Pool</h1>
+      <h1 class="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2">
+        Search Candidate Pool
+      </h1>
       <p class="text-gray-600">Find the right candidate from <?php echo number_format($totalCount); ?> profiles</p>
     </div>
 
     <!-- Search Bar -->
-    <div class="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
-      <form method="GET" class="flex flex-wrap gap-4 items-end">
+    <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm p-6 mb-6 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+      <form method="GET" class="flex flex-wrap gap-4 items-end relative z-10">
         <div class="flex-1 min-w-64">
           <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
           <div class="relative">
@@ -115,7 +122,7 @@ try {
               </svg>
             </div>
             <input type="text" name="keyword" placeholder="Search by name, skills, job title, company..."
-                   class="search-input pl-10"
+                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                    value="<?php echo htmlspecialchars($keyword); ?>">
           </div>
         </div>
@@ -123,15 +130,15 @@ try {
         <div class="w-48">
           <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
           <input type="text" name="city" placeholder="Location"
-                 class="search-input"
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                  value="<?php echo htmlspecialchars($city); ?>">
         </div>
         
         <div class="flex gap-2">
-          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          <button type="submit" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg">
             Search
           </button>
-          <a href="/apex-nexus-portal/company/search-candidates.php" 
+          <a href="<?php echo $COMPANY_URL; ?>/search-candidates.php" 
              class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
             Reset
           </a>
@@ -142,10 +149,11 @@ try {
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
       <!-- Left Sidebar - Filters -->
       <div class="lg:col-span-1">
-        <div class="bg-white rounded-2xl border border-gray-100 p-6 sticky top-24">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Filters</h3>
+        <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm p-6 sticky top-24 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 relative z-10">Filters</h3>
           
-          <form method="GET" class="space-y-6">
+          <form method="GET" class="space-y-6 relative z-10">
             <input type="hidden" name="keyword" value="<?php echo htmlspecialchars($keyword); ?>">
             <input type="hidden" name="city" value="<?php echo htmlspecialchars($city); ?>">
             
@@ -156,14 +164,14 @@ try {
                 <div>
                   <label class="block text-xs text-gray-600 mb-1">Min Years</label>
                   <input type="number" name="experience_min" min="0" max="50"
-                         class="search-input text-sm"
+                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
                          placeholder="0"
                          value="<?php echo htmlspecialchars($experienceMin); ?>">
                 </div>
                 <div>
                   <label class="block text-xs text-gray-600 mb-1">Max Years</label>
                   <input type="number" name="experience_max" min="0" max="50"
-                         class="search-input text-sm"
+                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
                          placeholder="50"
                          value="<?php echo htmlspecialchars($experienceMax); ?>">
                 </div>
@@ -204,7 +212,7 @@ try {
             <!-- Notice Period -->
             <div>
               <h4 class="text-sm font-medium text-gray-700 mb-3">Notice Period</h4>
-              <select name="notice_period" class="search-input text-sm">
+              <select name="notice_period" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm">
                 <option value="">Any</option>
                 <option value="immediate" <?php echo $noticePeriod === 'immediate' ? 'selected' : ''; ?>>Immediate</option>
                 <option value="15 days" <?php echo $noticePeriod === '15 days' ? 'selected' : ''; ?>>15 days</option>
@@ -214,7 +222,7 @@ try {
               </select>
             </div>
             
-            <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <button type="submit" class="w-full px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg">
               Apply Filters
             </button>
           </form>
@@ -227,14 +235,15 @@ try {
           <!-- Results Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             <?php foreach ($candidates as $candidate): ?>
-              <div class="candidate-card">
+              <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm p-5 hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-2xl"></div>
                 <!-- Header -->
-                <div class="flex items-start gap-3 mb-4">
-                  <div class="avatar" style="width: 48px; height: 48px; font-size: 18px;">
+                <div class="flex items-start gap-3 mb-4 relative z-10">
+                  <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
                     <?php echo strtoupper(substr($candidate['full_name'], 0, 1)); ?>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <h3 class="font-semibold text-gray-900 truncate"><?php echo htmlspecialchars($candidate['full_name']); ?></h3>
+                    <h3 class="font-bold text-gray-900 truncate"><?php echo htmlspecialchars($candidate['full_name']); ?></h3>
                     <p class="text-sm text-gray-600 truncate"><?php echo htmlspecialchars($candidate['current_job_title'] ?? 'Not specified'); ?></p>
                     <?php if ($candidate['current_company']): ?>
                       <p class="text-sm text-gray-500 truncate"><?php echo htmlspecialchars($candidate['current_company']); ?></p>
@@ -243,7 +252,7 @@ try {
                 </div>
                 
                 <!-- Location -->
-                <div class="text-sm text-gray-600 mb-3">
+                <div class="text-sm text-gray-600 mb-3 relative z-10">
                   <?php if ($candidate['city']): ?>
                     <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
@@ -257,15 +266,15 @@ try {
                 </div>
                 
                 <!-- Tags -->
-                <div class="flex flex-wrap gap-2 mb-4">
+                <div class="flex flex-wrap gap-2 mb-4 relative z-10">
                   <?php if ($candidate['total_experience']): ?>
-                    <span class="tag"><?php echo $candidate['total_experience']; ?> yrs</span>
+                    <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium"><?php echo $candidate['total_experience']; ?> yrs</span>
                   <?php endif; ?>
                   <?php if ($candidate['job_type']): ?>
-                    <span class="tag"><?php echo htmlspecialchars($candidate['job_type']); ?></span>
+                    <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium"><?php echo htmlspecialchars($candidate['job_type']); ?></span>
                   <?php endif; ?>
                   <?php if ($candidate['notice_period']): ?>
-                    <span class="tag"><?php echo htmlspecialchars($candidate['notice_period']); ?></span>
+                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium"><?php echo htmlspecialchars($candidate['notice_period']); ?></span>
                   <?php endif; ?>
                 </div>
                 
@@ -275,9 +284,9 @@ try {
                 if (!empty($skills)): 
                   $displaySkills = array_slice($skills, 0, 4);
                 ?>
-                  <div class="flex flex-wrap gap-1 mb-4">
+                  <div class="flex flex-wrap gap-1 mb-4 relative z-10">
                     <?php foreach ($displaySkills as $skill): ?>
-                      <span class="skill-chip text-xs"><?php echo htmlspecialchars($skill); ?></span>
+                      <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium hover:bg-gray-200 transition-colors"><?php echo htmlspecialchars($skill); ?></span>
                     <?php endforeach; ?>
                     <?php if (count($skills) > 4): ?>
                       <span class="text-xs text-gray-500">+<?php echo count($skills) - 4; ?> more</span>
@@ -286,14 +295,14 @@ try {
                 <?php endif; ?>
                 
                 <!-- Action -->
-                <div class="flex gap-2">
-                  <a href="/apex-nexus-portal/company/search-candidates.php?action=view_profile&id=<?php echo $candidate['id']; ?>" 
-                     class="flex-1 text-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                <div class="flex gap-2 relative z-10">
+                  <a href="<?php echo $COMPANY_URL; ?>/search-candidates.php?action=view_profile&id=<?php echo $candidate['id']; ?>" 
+                     class="flex-1 text-center px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-sm font-medium shadow-md">
                     View Profile
                   </a>
                   <?php if ($candidate['resume']): ?>
-                    <a href="/apex-nexus-portal/assets/uploads/resumes/<?php echo htmlspecialchars($candidate['resume']); ?>" 
-                       target="_blank" class="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-sm">
+                    <a href="<?php echo $ASSETS_URL; ?>/uploads/resumes/<?php echo htmlspecialchars($candidate['resume']); ?>" 
+                       target="_blank" class="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium">
                       Resume
                     </a>
                   <?php endif; ?>
@@ -304,8 +313,9 @@ try {
 
           <!-- Pagination -->
           <?php if ($totalPages > 1): ?>
-            <div class="bg-white rounded-2xl border border-gray-100 p-4 mt-6">
-              <div class="flex justify-between items-center">
+            <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm p-4 mt-6 relative overflow-hidden">
+              <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+              <div class="flex justify-between items-center relative z-10">
                 <div class="text-sm text-gray-700">
                   Showing <?php echo $offset + 1; ?> to <?php echo min($offset + $perPage, $totalCount); ?> 
                   of <?php echo $totalCount; ?> candidates
@@ -313,21 +323,21 @@ try {
                 <div class="flex gap-2">
                   <?php if ($page > 1): ?>
                     <a href="?page=<?php echo $page - 1; ?><?php echo !empty($keyword) ? '&keyword=' . urlencode($keyword) : ''; ?><?php echo !empty($city) ? '&city=' . urlencode($city) : ''; ?><?php echo !empty($experienceMin) ? '&experience_min=' . urlencode($experienceMin) : ''; ?><?php echo !empty($experienceMax) ? '&experience_max=' . urlencode($experienceMax) : ''; ?><?php echo !empty($jobType) ? '&job_type=' . urlencode($jobType) : ''; ?><?php echo !empty($noticePeriod) ? '&notice_period=' . urlencode($noticePeriod) : ''; ?>" 
-                       class="px-3 py-1 border border-gray-300 rounded text-gray-700 hover:bg-gray-50">
+                       class="px-3 py-1 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
                       Previous
                     </a>
                   <?php endif; ?>
                   
                   <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
                     <a href="?page=<?php echo $i; ?><?php echo !empty($keyword) ? '&keyword=' . urlencode($keyword) : ''; ?><?php echo !empty($city) ? '&city=' . urlencode($city) : ''; ?><?php echo !empty($experienceMin) ? '&experience_min=' . urlencode($experienceMin) : ''; ?><?php echo !empty($experienceMax) ? '&experience_max=' . urlencode($experienceMax) : ''; ?><?php echo !empty($jobType) ? '&job_type=' . urlencode($jobType) : ''; ?><?php echo !empty($noticePeriod) ? '&notice_period=' . urlencode($noticePeriod) : ''; ?>" 
-                       class="px-3 py-1 rounded <?php echo $i === $page ? 'bg-blue-600 text-white' : 'border border-gray-300 text-gray-700 hover:bg-gray-50'; ?>">
+                       class="px-3 py-1 rounded-lg <?php echo $i === $page ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white' : 'border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors'; ?>">
                       <?php echo $i; ?>
                     </a>
                   <?php endfor; ?>
                   
                   <?php if ($page < $totalPages): ?>
                     <a href="?page=<?php echo $page + 1; ?><?php echo !empty($keyword) ? '&keyword=' . urlencode($keyword) : ''; ?><?php echo !empty($city) ? '&city=' . urlencode($city) : ''; ?><?php echo !empty($experienceMin) ? '&experience_min=' . urlencode($experienceMin) : ''; ?><?php echo !empty($experienceMax) ? '&experience_max=' . urlencode($experienceMax) : ''; ?><?php echo !empty($jobType) ? '&job_type=' . urlencode($jobType) : ''; ?><?php echo !empty($noticePeriod) ? '&notice_period=' . urlencode($noticePeriod) : ''; ?>" 
-                       class="px-3 py-1 border border-gray-300 rounded text-gray-700 hover:bg-gray-50">
+                       class="px-3 py-1 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
                       Next
                     </a>
                   <?php endif; ?>
@@ -338,18 +348,24 @@ try {
 
         <?php else: ?>
           <!-- Empty State -->
-          <div class="bg-white rounded-2xl border border-gray-100 p-12 text-center">
-            <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">No candidates found</h3>
+          <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm p-12 text-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-2xl"></div>
+            <div class="relative z-10">
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full mx-auto mb-6 flex items-center justify-center">
+              <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">No candidates found</h3>
             <p class="text-gray-600">Try different keywords or adjust your search criteria</p>
+            </div>
           </div>
         <?php endif; ?>
       </div>
     </div>
 
-  </main>
+  </div>
 </div>
 
 <!-- Quick Actions Floating Button -->
@@ -362,13 +378,13 @@ try {
     </button>
     
     <div id="quickActionsMenu" class="quick-actions-menu hidden">
-        <a href="/apex-nexus-portal/company/post-job.php" class="quick-action">
+        <a href="<?php echo $COMPANY_URL; ?>/post-job.php" class="quick-action">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 4v16m8-8H4"/>
             </svg>
             <span>Post Job</span>
         </a>
-        <a href="/apex-nexus-portal/company/manage-jobs.php" class="quick-action">
+        <a href="<?php echo $COMPANY_URL; ?>/manage-jobs.php" class="quick-action">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                 <line x1="9" y1="9" x2="15" y2="9"/>
@@ -376,7 +392,7 @@ try {
             </svg>
             <span>Manage Jobs</span>
         </a>
-        <a href="/apex-nexus-portal/company/applicants.php" class="quick-action">
+        <a href="<?php echo $COMPANY_URL; ?>/applicants.php" class="quick-action">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                 <circle cx="9" cy="7" r="4"/>
@@ -384,7 +400,7 @@ try {
             </svg>
             <span>View Applicants</span>
         </a>
-        <a href="/apex-nexus-portal/company/profile.php" class="quick-action">
+        <a href="<?php echo $COMPANY_URL; ?>/profile.php" class="quick-action">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>

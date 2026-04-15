@@ -88,15 +88,22 @@ try {
 }
 ?>
 
-<link rel="stylesheet" href="/apex-nexus-portal/assets/css/company.css">
+<!-- Company CSS Imports -->
+<link rel="stylesheet" href="/apex-nexus-portal/assets/css/company-nav.css">
+<link rel="stylesheet" href="/apex-nexus-portal/assets/css/company-modern.css">
 
-<div class="flex min-h-screen bg-gray-50">
-  <main class="flex-1 p-6 lg:p-8">
+<!-- Modern Company Navigation -->
+<?php include '../includes/company-navbar.php'; ?>
+
+<div class="min-h-screen bg-gray-50 pt-28">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Applicant Details</h1>
+          <h1 class="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2">
+            Applicant Details
+          </h1>
           <p class="text-gray-600">Review candidate profile and application information.</p>
         </div>
         <div class="flex gap-3">
@@ -112,11 +119,22 @@ try {
       <!-- Left Column - Candidate Profile -->
       <div class="lg:col-span-2 space-y-6">
         <!-- Candidate Header Card -->
-        <div class="bg-white rounded-2xl border border-gray-100 p-6">
-          <div class="flex items-start gap-6">
+        <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm p-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+          <div class="flex items-start gap-6 relative z-10">
             <!-- Avatar -->
-            <div class="avatar" style="width: 64px; height: 64px; font-size: 24px;">
-              <?php echo strtoupper(substr($application['full_name'], 0, 1)); ?>
+            <div class="relative group">
+              <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+              <div class="relative w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full overflow-hidden shadow-xl flex items-center justify-center">
+                <?php if ($application['profile_photo']): ?>
+                  <img src="/apex-nexus-portal/<?php echo htmlspecialchars($application['profile_photo']); ?>" 
+                       alt="Profile" class="w-full h-full object-cover">
+                <?php else: ?>
+                  <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    <?php echo strtoupper(substr($application['full_name'], 0, 1)); ?>
+                  </span>
+                <?php endif; ?>
+              </div>
             </div>
             
             <!-- Info -->
@@ -142,13 +160,19 @@ try {
               <!-- Tags -->
               <div class="flex flex-wrap gap-2 mb-4">
                 <?php if ($application['total_experience']): ?>
-                  <span class="tag"><?php echo $application['total_experience']; ?> yrs exp</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded bg-blue-50 text-blue-700 text-xs font-medium">
+                    <?php echo $application['total_experience']; ?> yrs exp
+                  </span>
                 <?php endif; ?>
                 <?php if ($application['notice_period']): ?>
-                  <span class="tag"><?php echo htmlspecialchars($application['notice_period']); ?> notice</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded bg-green-50 text-green-700 text-xs font-medium">
+                    <?php echo htmlspecialchars($application['notice_period']); ?> notice
+                  </span>
                 <?php endif; ?>
                 <?php if ($application['job_type']): ?>
-                  <span class="tag"><?php echo htmlspecialchars($application['job_type']); ?></span>
+                  <span class="inline-flex items-center px-2 py-1 rounded bg-purple-50 text-purple-700 text-xs font-medium">
+                    <?php echo htmlspecialchars($application['job_type']); ?>
+                  </span>
                 <?php endif; ?>
               </div>
               
@@ -156,7 +180,7 @@ try {
               <div class="flex flex-wrap gap-3">
                 <?php if ($application['resume']): ?>
                   <a href="/apex-nexus-portal/assets/uploads/resumes/<?php echo htmlspecialchars($application['resume']); ?>" 
-                     target="_blank" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                     target="_blank" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg">
                     Download Resume
                   </a>
                 <?php endif; ?>
@@ -172,7 +196,7 @@ try {
                 <form method="POST" class="inline">
                   <input type="hidden" name="action" value="update_status">
                   <select name="status" onchange="this.form.submit()" 
-                          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                          class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Change Status</option>
                     <option value="applied" <?php echo $application['status'] === 'applied' ? 'selected' : ''; ?>>Applied</option>
                     <option value="reviewed" <?php echo $application['status'] === 'reviewed' ? 'selected' : ''; ?>>Reviewed</option>
@@ -186,8 +210,9 @@ try {
         </div>
 
         <!-- Tabs -->
-        <div class="bg-white rounded-2xl border border-gray-100">
-          <div class="border-b border-gray-200">
+        <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+          <div class="border-b border-gray-200 relative z-10">
             <nav class="flex space-x-8 px-6" aria-label="Tabs">
               <button type="button" class="tab-button py-4 px-1 border-b-2 font-medium text-sm border-blue-500 text-blue-600" data-tab="tab1">
                 Overview
@@ -347,92 +372,200 @@ try {
       <!-- Right Column - Action Panel -->
       <div class="space-y-6">
         <!-- Application Status -->
-        <div class="bg-white rounded-2xl border border-gray-100 p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Application Status</h3>
-          <div class="mb-4">
-            <span class="badge badge-<?php echo $application['status']; ?> text-lg px-4 py-2">
+        <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm p-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+          <div class="flex items-center gap-3 mb-4 relative z-10">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900">Application Status</h3>
+          </div>
+          <div class="mb-4 relative z-10">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+              <?php 
+              $statusColors = [
+                'applied' => 'bg-blue-100 text-blue-700',
+                'reviewed' => 'bg-yellow-100 text-yellow-700',
+                'shortlisted' => 'bg-green-100 text-green-700',
+                'rejected' => 'bg-red-100 text-red-700'
+              ];
+              echo $statusColors[$application['status']] ?? 'bg-gray-100 text-gray-700';
+              ?>">
               <?php echo ucfirst($application['status']); ?>
             </span>
           </div>
-          <form method="POST">
+          <form method="POST" class="relative z-10">
             <input type="hidden" name="action" value="update_status">
-            <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700">
+            <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
               <option value="">Change Status</option>
               <option value="applied" <?php echo $application['status'] === 'applied' ? 'selected' : ''; ?>>Applied</option>
               <option value="reviewed" <?php echo $application['status'] === 'reviewed' ? 'selected' : ''; ?>>Reviewed</option>
               <option value="shortlisted" <?php echo $application['status'] === 'shortlisted' ? 'selected' : ''; ?>>Shortlisted</option>
               <option value="rejected" <?php echo $application['status'] === 'rejected' ? 'selected' : ''; ?>>Rejected</option>
             </select>
-            <button type="submit" class="w-full mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <button type="submit" class="w-full mt-3 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg">
               Update Status
             </button>
           </form>
         </div>
 
+        <!-- Candidate Summary -->
+        <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm p-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+          <div class="flex items-center gap-3 mb-4 relative z-10">
+            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900">Candidate Summary</h3>
+          </div>
+          <div class="space-y-3 relative z-10">
+            <?php if ($application['total_experience']): ?>
+              <div class="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+                <span class="text-gray-600 text-sm">Experience</span>
+                <span class="font-semibold text-gray-900"><?php echo $application['total_experience']; ?> yrs</span>
+              </div>
+            <?php endif; ?>
+            <?php if ($application['notice_period']): ?>
+              <div class="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+                <span class="text-gray-600 text-sm">Notice Period</span>
+                <span class="font-semibold text-gray-900"><?php echo htmlspecialchars($application['notice_period']); ?></span>
+              </div>
+            <?php endif; ?>
+            <?php if ($application['job_type']): ?>
+              <div class="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+                <span class="text-gray-600 text-sm">Job Type</span>
+                <span class="font-semibold text-gray-900"><?php echo htmlspecialchars($application['job_type']); ?></span>
+              </div>
+            <?php endif; ?>
+            <?php if ($application['expected_salary']): ?>
+              <div class="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+                <span class="text-gray-600 text-sm">Expected Salary</span>
+                <span class="font-semibold text-gray-900"><?php echo htmlspecialchars($application['expected_salary']); ?></span>
+              </div>
+            <?php endif; ?>
+          </div>
+        </div>
+
         <!-- Job Details -->
-        <div class="bg-white rounded-2xl border border-gray-100 p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Job Details</h3>
-          <div class="space-y-2 text-gray-600">
-            <p><strong>Position:</strong> <?php echo htmlspecialchars($application['job_title']); ?></p>
-            <p><strong>Location:</strong> <?php echo htmlspecialchars($application['job_location'] ?? $application['job_city']); ?></p>
-            <p><strong>Type:</strong> <?php echo htmlspecialchars(ucwords(str_replace('-', ' ', $application['employment_type']))); ?></p>
-            <p><strong>Mode:</strong> <?php echo htmlspecialchars(ucwords($application['work_mode'])); ?></p>
+        <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm p-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+          <div class="flex items-center gap-3 mb-4 relative z-10">
+            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900">Job Details</h3>
+          </div>
+          <div class="space-y-3 relative z-10">
+            <div class="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+              <span class="text-gray-600 text-sm">Position</span>
+              <span class="font-semibold text-gray-900 text-right text-sm"><?php echo htmlspecialchars($application['job_title']); ?></span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+              <span class="text-gray-600 text-sm">Location</span>
+              <span class="font-semibold text-gray-900 text-right text-sm"><?php echo htmlspecialchars($application['job_location'] ?? $application['job_city']); ?></span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+              <span class="text-gray-600 text-sm">Type</span>
+              <span class="font-semibold text-gray-900 text-right text-sm"><?php echo htmlspecialchars(ucwords(str_replace('-', ' ', $application['employment_type']))); ?></span>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+              <span class="text-gray-600 text-sm">Mode</span>
+              <span class="font-semibold text-gray-900 text-right text-sm"><?php echo htmlspecialchars(ucwords($application['work_mode'])); ?></span>
+            </div>
             <?php if ($application['salary']): ?>
-              <p><strong>Salary:</strong> <?php echo htmlspecialchars($application['salary']); ?></p>
+              <div class="flex items-center justify-between p-3 bg-white/50 rounded-lg">
+                <span class="text-gray-600 text-sm">Salary</span>
+                <span class="font-semibold text-gray-900 text-right text-sm"><?php echo htmlspecialchars($application['salary']); ?></span>
+              </div>
             <?php endif; ?>
           </div>
           <a href="/apex-nexus-portal/company/applicants.php?job_id=<?php echo $application['job_id']; ?>" 
-             class="block w-full mt-4 text-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+             class="block w-full mt-4 text-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors relative z-10">
             View All Applicants
           </a>
         </div>
 
         <!-- Candidate Contact -->
-        <div class="bg-white rounded-2xl border border-gray-100 p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
-          <div class="space-y-3">
+        <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm p-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+          <div class="flex items-center gap-3 mb-4 relative z-10">
+            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900">Contact Information</h3>
+          </div>
+          <div class="space-y-3 relative z-10">
             <?php if ($application['email']): ?>
               <a href="mailto:<?php echo htmlspecialchars($application['email']); ?>" 
-                 class="block text-blue-600 hover:text-blue-700">
-                <?php echo htmlspecialchars($application['email']); ?>
+                 class="flex items-center gap-3 p-3 bg-white/50 rounded-lg hover:bg-white/70 transition-colors group">
+                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                  <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <span class="text-gray-700 text-sm truncate"><?php echo htmlspecialchars($application['email']); ?></span>
               </a>
             <?php endif; ?>
             
             <?php if ($application['phone']): ?>
               <a href="tel:<?php echo htmlspecialchars($application['phone']); ?>" 
-                 class="block text-gray-700 hover:text-gray-900">
-                <?php echo htmlspecialchars($application['phone']); ?>
+                 class="flex items-center gap-3 p-3 bg-white/50 rounded-lg hover:bg-white/70 transition-colors group">
+                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors">
+                  <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                  </svg>
+                </div>
+                <span class="text-gray-700 text-sm"><?php echo htmlspecialchars($application['phone']); ?></span>
               </a>
             <?php endif; ?>
             
             <?php if ($application['linkedin_url']): ?>
               <a href="<?php echo htmlspecialchars($application['linkedin_url']); ?>" 
-                 target="_blank" class="block text-blue-600 hover:text-blue-700">
-                LinkedIn Profile
+                 target="_blank" class="flex items-center gap-3 p-3 bg-white/50 rounded-lg hover:bg-white/70 transition-colors group">
+                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                  <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                </div>
+                <span class="text-gray-700 text-sm">LinkedIn Profile</span>
               </a>
             <?php endif; ?>
           </div>
           
           <a href="mailto:<?php echo htmlspecialchars($application['email']); ?>" 
-             class="block w-full mt-4 text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+             class="block w-full mt-4 text-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg relative z-10">
             Send Email
           </a>
         </div>
 
         <!-- Quick Notes -->
-        <div class="bg-white rounded-2xl border border-gray-100 p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Notes</h3>
+        <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-2xl shadow-xl border border-gray-100 backdrop-blur-sm p-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
+          <div class="flex items-center gap-3 mb-4 relative z-10">
+            <div class="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900">Quick Notes</h3>
+          </div>
           <textarea id="quickNotes" rows="4" placeholder="Add internal notes about this candidate..."
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 resize-none"></textarea>
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none relative z-10"></textarea>
           <button onclick="saveQuickNotes()" 
-                  class="w-full mt-3 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                  class="w-full mt-3 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors relative z-10">
             Save Note
           </button>
         </div>
       </div>
     </div>
-
-  </main>
 </div>
 
 <script>
@@ -483,74 +616,6 @@ quickNotesTextarea.addEventListener('input', () => {
     localStorage.setItem(notesKey, quickNotesTextarea.value);
   }, 1000);
 });
-</script>
-
-</main>
-</div>
-
-<!-- Quick Actions Floating Button -->
-<div class="quick-actions">
-    <button class="fab" onclick="toggleQuickActions()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-        </svg>
-    </button>
-    
-    <div id="quickActionsMenu" class="quick-actions-menu hidden">
-        <a href="/apex-nexus-portal/company/post-job.php" class="quick-action">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 4v16m8-8H4"/>
-            </svg>
-            <span>Post Job</span>
-        </a>
-        <a href="/apex-nexus-portal/company/manage-jobs.php" class="quick-action">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                <line x1="9" y1="9" x2="15" y2="9"/>
-                <line x1="9" y1="15" x2="15" y2="15"/>
-            </svg>
-            <span>Manage Jobs</span>
-        </a>
-        <a href="/apex-nexus-portal/company/applicants.php" class="quick-action">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-4-4h-1v-4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v4h-1"/>
-            </svg>
-            <span>View Applicants</span>
-        </a>
-        <a href="/apex-nexus-portal/company/profile.php" class="quick-action">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-            </svg>
-            <span>Edit Profile</span>
-        </a>
-    </div>
-</div>
-
-<script>
-function toggleQuickActions() {
-    const menu = document.getElementById('quickActionsMenu');
-    menu.classList.toggle('hidden');
-    
-    if (!menu.classList.contains('hidden')) {
-        setTimeout(() => {
-            document.addEventListener('click', closeQuickActions);
-        }, 100);
-    }
-}
-
-function closeQuickActions(e) {
-    const menu = document.getElementById('quickActionsMenu');
-    const button = document.querySelector('.fab');
-    
-    if (!menu.contains(e.target) && !button.contains(e.target)) {
-        menu.classList.add('hidden');
-        document.removeEventListener('click', closeQuickActions);
-    }
-}
 </script>
 
 <?php require_once '../includes/footer.php'; ?>
