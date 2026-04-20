@@ -25,6 +25,13 @@ $totalApplications = 0;
 $statusCounts = ['applied' => 0, 'reviewed' => 0, 'shortlisted' => 0, 'rejected' => 0];
 $recentApplications = [];
 $recommendedJobs = [];
+$profileViews = 0;
+$trends = [
+    'applications' => ['current' => 0, 'previous' => 0, 'percentage' => 0],
+    'shortlisted' => ['current' => 0, 'previous' => 0, 'percentage' => 0],
+    'reviewed' => ['current' => 0, 'previous' => 0, 'percentage' => 0],
+    'profile_views' => ['current' => 0, 'previous' => 0, 'percentage' => 0]
+];
 
 if ($candidateId) {
     // Total applications
@@ -38,6 +45,105 @@ if ($candidateId) {
     $statusData = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($statusData as $row) {
         $statusCounts[$row['status']] = $row['count'];
+    }
+    
+    // Profile views count (current month) - only if table exists
+    try {
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*) as count 
+            FROM profile_views 
+            WHERE candidate_id = ? 
+            AND viewed_at >= DATE_FORMAT(NOW(), '%Y-%m-01')
+        ");
+        $stmt->execute([$candidateId]);
+        $profileViews = $stmt->fetch(PDO::FETCH_ASSOC)['count'] ?? 0;
+    } catch (PDOException $e) {
+        // Table doesn't exist yet, set to 0
+        $profileViews = 0;
+    }
+    
+    // Calculate trends (compare current month vs previous month)
+    // Applications trend
+    $stmt = $pdo->prepare("
+        SELECT 
+            COUNT(CASE WHEN created_at >= DATE_FORMAT(NOW(), '%Y-%m-01') THEN 1 END) as current_month,
+            COUNT(CASE WHEN created_at >= DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%Y-%m-01') 
+                       AND created_at < DATE_FORMAT(NOW(), '%Y-%m-01') THEN 1 END) as previous_month
+        FROM applications 
+        WHERE candidate_id = ? AND is_deleted = 0
+    ");
+    $stmt->execute([$candidateId]);
+    $appTrend = $stmt->fetch(PDO::FETCH_ASSOC);
+    $trends['applications']['current'] = $appTrend['current_month'] ?? 0;
+    $trends['applications']['previous'] = $appTrend['previous_month'] ?? 0;
+    if ($trends['applications']['previous'] > 0) {
+        $trends['applications']['percentage'] = round((($trends['applications']['current'] - $trends['applications']['previous']) / $trends['applications']['previous']) * 100);
+    } elseif ($trends['applications']['current'] > 0) {
+        $trends['applications']['percentage'] = 100;
+    }
+    
+    // Shortlisted trend
+    $stmt = $pdo->prepare("
+        SELECT 
+            COUNT(CASE WHEN updated_at >= DATE_FORMAT(NOW(), '%Y-%m-01') AND status = 'shortlisted' THEN 1 END) as current_month,
+            COUNT(CASE WHEN updated_at >= DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%Y-%m-01') 
+                       AND updated_at < DATE_FORMAT(NOW(), '%Y-%m-01') AND status = 'shortlisted' THEN 1 END) as previous_month
+        FROM applications 
+        WHERE candidate_id = ? AND is_deleted = 0
+    ");
+    $stmt->execute([$candidateId]);
+    $shortTrend = $stmt->fetch(PDO::FETCH_ASSOC);
+    $trends['shortlisted']['current'] = $shortTrend['current_month'] ?? 0;
+    $trends['shortlisted']['previous'] = $shortTrend['previous_month'] ?? 0;
+    if ($trends['shortlisted']['previous'] > 0) {
+        $trends['shortlisted']['percentage'] = round((($trends['shortlisted']['current'] - $trends['shortlisted']['previous']) / $trends['shortlisted']['previous']) * 100);
+    } elseif ($trends['shortlisted']['current'] > 0) {
+        $trends['shortlisted']['percentage'] = 100;
+    }
+    
+    // Reviewed trend
+    $stmt = $pdo->prepare("
+        SELECT 
+            COUNT(CASE WHEN updated_at >= DATE_FORMAT(NOW(), '%Y-%m-01') AND status = 'reviewed' THEN 1 END) as current_month,
+            COUNT(CASE WHEN updated_at >= DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%Y-%m-01') 
+                       AND updated_at < DATE_FORMAT(NOW(), '%Y-%m-01') AND status = 'reviewed' THEN 1 END) as previous_month
+        FROM applications 
+        WHERE candidate_id = ? AND is_deleted = 0
+    ");
+    $stmt->execute([$candidateId]);
+    $reviewTrend = $stmt->fetch(PDO::FETCH_ASSOC);
+    $trends['reviewed']['current'] = $reviewTrend['current_month'] ?? 0;
+    $trends['reviewed']['previous'] = $reviewTrend['previous_month'] ?? 0;
+    if ($trends['reviewed']['previous'] > 0) {
+        $trends['reviewed']['percentage'] = round((($trends['reviewed']['current'] - $trends['reviewed']['previous']) / $trends['reviewed']['previous']) * 100);
+    } elseif ($trends['reviewed']['current'] > 0) {
+        $trends['reviewed']['percentage'] = 100;
+    }
+    
+    // Profile views trend
+    try {
+        $stmt = $pdo->prepare("
+            SELECT 
+                COUNT(CASE WHEN viewed_at >= DATE_FORMAT(NOW(), '%Y-%m-01') THEN 1 END) as current_month,
+                COUNT(CASE WHEN viewed_at >= DATE_FORMAT(NOW() - INTERVAL 1 MONTH, '%Y-%m-01') 
+                           AND viewed_at < DATE_FORMAT(NOW(), '%Y-%m-01') THEN 1 END) as previous_month
+            FROM profile_views 
+            WHERE candidate_id = ?
+        ");
+        $stmt->execute([$candidateId]);
+        $viewTrend = $stmt->fetch(PDO::FETCH_ASSOC);
+        $trends['profile_views']['current'] = $viewTrend['current_month'] ?? 0;
+        $trends['profile_views']['previous'] = $viewTrend['previous_month'] ?? 0;
+        if ($trends['profile_views']['previous'] > 0) {
+            $trends['profile_views']['percentage'] = round((($trends['profile_views']['current'] - $trends['profile_views']['previous']) / $trends['profile_views']['previous']) * 100);
+        } elseif ($trends['profile_views']['current'] > 0) {
+            $trends['profile_views']['percentage'] = 100;
+        }
+    } catch (PDOException $e) {
+        // Table doesn't exist yet, keep default values
+        $trends['profile_views']['current'] = 0;
+        $trends['profile_views']['previous'] = 0;
+        $trends['profile_views']['percentage'] = 0;
     }
     
     // Recent applications
@@ -235,14 +341,24 @@ $dayMessage = $dayMessages[$dayOfWeek] ?? '';
                         </svg>
                     </div>
                     <div class="stat-content">
-                        <div class="stat-number"><?php echo $totalApplications; ?></div>
-                        <div class="stat-label">Total Applications</div>
+                        <div class="stat-number"><?php echo $totalApplications > 0 ? $totalApplications : '—'; ?></div>
+                        <div class="stat-label"><?php echo $totalApplications > 0 ? 'Total Applications' : 'No Applications'; ?></div>
                     </div>
-                    <div class="stat-trend positive">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-                        </svg>
-                        <span>+12%</span>
+                    <div class="stat-trend <?php echo $trends['applications']['percentage'] > 0 ? 'positive' : ($trends['applications']['percentage'] < 0 ? 'negative' : 'neutral'); ?>">
+                        <?php if ($trends['applications']['percentage'] > 0): ?>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            </svg>
+                        <?php elseif ($trends['applications']['percentage'] < 0): ?>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
+                            </svg>
+                        <?php else: ?>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                        <?php endif; ?>
+                        <span><?php echo ($trends['applications']['percentage'] > 0 ? '+' : '') . $trends['applications']['percentage']; ?>%</span>
                     </div>
                 </div>
 
@@ -254,14 +370,24 @@ $dayMessage = $dayMessages[$dayOfWeek] ?? '';
                         </svg>
                     </div>
                     <div class="stat-content">
-                        <div class="stat-number"><?php echo $statusCounts['shortlisted']; ?></div>
-                        <div class="stat-label">Shortlisted</div>
+                        <div class="stat-number"><?php echo $statusCounts['shortlisted'] > 0 ? $statusCounts['shortlisted'] : '—'; ?></div>
+                        <div class="stat-label"><?php echo $statusCounts['shortlisted'] > 0 ? 'Shortlisted' : 'Not Shortlisted Yet'; ?></div>
                     </div>
-                    <div class="stat-trend positive">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-                        </svg>
-                        <span>+8%</span>
+                    <div class="stat-trend <?php echo $trends['shortlisted']['percentage'] > 0 ? 'positive' : ($trends['shortlisted']['percentage'] < 0 ? 'negative' : 'neutral'); ?>">
+                        <?php if ($trends['shortlisted']['percentage'] > 0): ?>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            </svg>
+                        <?php elseif ($trends['shortlisted']['percentage'] < 0): ?>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
+                            </svg>
+                        <?php else: ?>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                        <?php endif; ?>
+                        <span><?php echo ($trends['shortlisted']['percentage'] > 0 ? '+' : '') . $trends['shortlisted']['percentage']; ?>%</span>
                     </div>
                 </div>
 
@@ -273,14 +399,24 @@ $dayMessage = $dayMessages[$dayOfWeek] ?? '';
                         </svg>
                     </div>
                     <div class="stat-content">
-                        <div class="stat-number"><?php echo $statusCounts['reviewed']; ?></div>
-                        <div class="stat-label">Under Review</div>
+                        <div class="stat-number"><?php echo $statusCounts['reviewed'] > 0 ? $statusCounts['reviewed'] : '—'; ?></div>
+                        <div class="stat-label"><?php echo $statusCounts['reviewed'] > 0 ? 'Under Review' : 'Not Reviewed Yet'; ?></div>
                     </div>
-                    <div class="stat-trend neutral">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="5" y1="12" x2="19" y2="12"/>
-                        </svg>
-                        <span>0%</span>
+                    <div class="stat-trend <?php echo $trends['reviewed']['percentage'] > 0 ? 'positive' : ($trends['reviewed']['percentage'] < 0 ? 'negative' : 'neutral'); ?>">
+                        <?php if ($trends['reviewed']['percentage'] > 0): ?>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            </svg>
+                        <?php elseif ($trends['reviewed']['percentage'] < 0): ?>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
+                            </svg>
+                        <?php else: ?>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                        <?php endif; ?>
+                        <span><?php echo ($trends['reviewed']['percentage'] > 0 ? '+' : '') . $trends['reviewed']['percentage']; ?>%</span>
                     </div>
                 </div>
 
@@ -292,14 +428,24 @@ $dayMessage = $dayMessages[$dayOfWeek] ?? '';
                         </svg>
                     </div>
                     <div class="stat-content">
-                        <div class="stat-number">247</div>
-                        <div class="stat-label">Profile Views</div>
+                        <div class="stat-number"><?php echo $profileViews > 0 ? $profileViews : '—'; ?></div>
+                        <div class="stat-label"><?php echo $profileViews > 0 ? 'Profile Views' : 'No Views Yet'; ?></div>
                     </div>
-                    <div class="stat-trend positive">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-                        </svg>
-                        <span>+24%</span>
+                    <div class="stat-trend <?php echo $trends['profile_views']['percentage'] > 0 ? 'positive' : ($trends['profile_views']['percentage'] < 0 ? 'negative' : 'neutral'); ?>">
+                        <?php if ($trends['profile_views']['percentage'] > 0): ?>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            </svg>
+                        <?php elseif ($trends['profile_views']['percentage'] < 0): ?>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
+                            </svg>
+                        <?php else: ?>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                        <?php endif; ?>
+                        <span><?php echo ($trends['profile_views']['percentage'] > 0 ? '+' : '') . $trends['profile_views']['percentage']; ?>%</span>
                     </div>
                 </div>
             </div>

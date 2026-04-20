@@ -229,7 +229,7 @@ require_once '../includes/admin-sidebar.php';
                                     <?php echo formatDate($application['created_at']); ?>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="<?php echo $ADMIN_URL; ?>/application-detail.php?id=<?php echo $application['id']; ?>" 
+                                    <a href="<?php echo $ADMIN_URL; ?>/candidate-detail.php?id=<?php echo $application['candidate_id']; ?>" 
                                        class="text-blue-600 hover:text-blue-900 text-sm">
                                         View Details
                                     </a>

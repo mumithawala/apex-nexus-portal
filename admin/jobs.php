@@ -236,14 +236,10 @@ require_once '../includes/admin-sidebar.php';
                                     </form>
                                 <?php endif; ?>
 
-                                <form method="POST" class="flex-1">
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="job_id" value="<?php echo $job['id']; ?>">
-                                    <button type="submit" class="w-full px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-sm font-medium"
-                                            onclick="return confirm('Are you sure you want to delete this job?')">
-                                        Delete
-                                    </button>
-                                </form>
+                                <button type="button" class="flex-1 px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-sm font-medium"
+                                        onclick="openDeleteModal(<?php echo $job['id']; ?>)">
+                                    Delete
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -282,5 +278,82 @@ require_once '../includes/admin-sidebar.php';
 </div>
 
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirm Job Deletion</h3>
+            <p class="text-sm text-gray-600 mb-4">
+                Are you sure you want to delete this job? This action cannot be undone.
+            </p>
+            
+            <!-- Terms and Conditions -->
+            <div class="mb-4 p-4 bg-gray-50 rounded-lg">
+                <label class="flex items-start cursor-pointer">
+                    <input type="checkbox" id="termsCheckbox" class="mt-1 mr-3 h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                    <span class="text-sm text-gray-700">
+                        <strong>Terms and Conditions:</strong> I understand that deleting this job will permanently remove it from the system and this action cannot be undone. I confirm that I have the authority to delete this job posting.
+                    </span>
+                </label>
+            </div>
+            
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" onclick="closeDeleteModal()"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm font-medium">
+                    Cancel
+                </button>
+                <button type="button" id="confirmDeleteBtn" onclick="confirmDelete()"
+                        disabled
+                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                    Delete Job
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Form (hidden) -->
+<form id="deleteForm" method="POST" style="display: none;">
+    <input type="hidden" name="action" value="delete">
+    <input type="hidden" name="job_id" id="deleteJobId">
+</form>
+
+<script>
+let currentJobId = null;
+
+function openDeleteModal(jobId) {
+    currentJobId = jobId;
+    document.getElementById('deleteModal').classList.remove('hidden');
+    document.getElementById('deleteModal').classList.add('flex');
+    document.getElementById('termsCheckbox').checked = false;
+    document.getElementById('confirmDeleteBtn').disabled = true;
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+    document.getElementById('deleteModal').classList.remove('flex');
+    currentJobId = null;
+}
+
+function confirmDelete() {
+    if (currentJobId && document.getElementById('termsCheckbox').checked) {
+        document.getElementById('deleteJobId').value = currentJobId;
+        document.getElementById('deleteForm').submit();
+    }
+}
+
+// Enable/disable delete button based on checkbox
+document.getElementById('termsCheckbox').addEventListener('change', function() {
+    document.getElementById('confirmDeleteBtn').disabled = !this.checked;
+});
+
+// Close modal when clicking outside
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDeleteModal();
+    }
+});
+</script>
 
 <?php require_once '../includes/footer.php'; ?>

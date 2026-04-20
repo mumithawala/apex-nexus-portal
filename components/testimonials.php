@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Section Heading -->
         <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold text-gray-900 mb-4">Trusted by Recruiters Across India</h2>
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Trusted by Recruiters</h2>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto">
                 See what leading companies say about their experience with Apex Nexus
             </p>

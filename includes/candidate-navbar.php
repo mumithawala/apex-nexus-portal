@@ -68,12 +68,7 @@ $initials = substr($candidate['full_name'] ?? 'U', 0, 1) . substr($candidate['fu
                 <span class="notification-badge">3</span>
             </button>
 
-            <!-- Messages -->
-            <button class="nav-btn">
-                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
-            </button>
+          
 
             <!-- User Dropdown -->
             <div class="user-dropdown">

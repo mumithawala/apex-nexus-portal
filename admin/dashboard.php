@@ -37,7 +37,22 @@ try {
     ");
     $recentJobs = $recentJobsStmt->fetchAll();
 
-
+    // Get recent applications with candidate and job details
+    $recentApplicationsStmt = $pdo->query("
+        SELECT a.*, 
+               u.first_name, u.last_name, 
+               j.title as job_title, 
+               comp.company_name 
+        FROM applications a
+        LEFT JOIN candidates c ON a.candidate_id = c.id
+        LEFT JOIN users u ON c.user_id = u.id
+        LEFT JOIN jobs j ON a.job_id = j.id
+        LEFT JOIN companies comp ON j.company_id = comp.id
+        WHERE a.is_deleted = 0
+        ORDER BY a.created_at DESC
+        LIMIT 5
+    ");
+    $recentApplications = $recentApplicationsStmt->fetchAll();
 
 } catch (PDOException $e) {
     error_log("Dashboard error: " . $e->getMessage());
@@ -206,7 +221,31 @@ require_once '../includes/admin-sidebar.php';
                             </tr>
                         </thead>
                         <tbody>
-                            
+                            <?php if (empty($recentApplications)): ?>
+                                <tr>
+                                    <td colspan="3" class="px-4 py-8 text-center text-gray-500">
+                                        No applications yet
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($recentApplications as $app): ?>
+                                    <tr class="border-t">
+                                        <td class="px-4 py-2">
+                                            <?php echo htmlspecialchars($app['first_name'] . ' ' . $app['last_name']); ?>
+                                        </td>
+                                        <td class="px-4 py-2">
+                                            <?php echo htmlspecialchars($app['job_title']); ?>
+                                            <br>
+                                            <span class="text-xs text-gray-500"><?php echo htmlspecialchars($app['company_name']); ?></span>
+                                        </td>
+                                        <td class="px-4 py-2">
+                                            <span class="text-xs px-2 py-1 rounded <?php echo $app['status'] === 'shortlisted' ? 'bg-green-100 text-green-700' : ($app['status'] === 'reviewed' ? 'bg-yellow-100 text-yellow-700' : ($app['status'] === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-gray-100')); ?>">
+                                                <?php echo ucfirst($app['status']); ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>

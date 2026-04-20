@@ -163,7 +163,7 @@ require_once '../includes/admin-sidebar.php'
                         <!-- Resume Download -->
                         <?php if (!empty($candidate['resume']) && $candidate['resume'] !== 'N/A'): ?>
                             <div class="mb-4">
-                                <a href="<?php echo $UPLOADS_URL; ?>/resumes/<?php echo htmlspecialchars($candidate['resume']); ?>" 
+                                <a href="<?php echo $UPLOADS_URL; ?>/resumes/<?php echo htmlspecialchars(basename($candidate['resume'])); ?>" 
                                    target="_blank" 
                                    class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -269,16 +269,30 @@ require_once '../includes/admin-sidebar.php'
                     <!-- Work Experience -->
                     <div>
                         <h3 class="text-sm font-medium text-gray-900 mb-2">Work Experience</h3>
-                        <p class="text-gray-600 text-sm">
+                        <div class="text-gray-600 text-sm">
                             <?php 
                             $experience = $candidate['experience'] ?? '';
                             if (!empty($experience) && $experience !== 'N/A') {
-                                echo nl2br(htmlspecialchars($experience));
+                                $experienceData = json_decode($experience, true);
+                                if (is_array($experienceData) && !empty($experienceData)) {
+                                    foreach ($experienceData as $exp) {
+                                        echo '<div class="mb-2 pb-2 border-b border-gray-100 last:border-0">';
+                                        echo '<div class="font-medium">' . htmlspecialchars($exp['job_title'] ?? 'N/A') . '</div>';
+                                        echo '<div class="text-xs text-gray-500">' . htmlspecialchars($exp['company'] ?? 'N/A') . '</div>';
+                                        $startDate = !empty($exp['start_date']) ? formatDate($exp['start_date']) : 'N/A';
+                                        $endDate = !empty($exp['end_date']) ? formatDate($exp['end_date']) : ($exp['is_current'] ?? false ? 'Present' : 'N/A');
+                                        echo '<div class="text-xs text-gray-400">' . $startDate . ' - ' . $endDate . '</div>';
+                                        echo '<div class="text-xs text-gray-400">' . htmlspecialchars($exp['employment_type'] ?? 'N/A') . '</div>';
+                                        echo '</div>';
+                                    }
+                                } else {
+                                    echo 'Invalid experience data';
+                                }
                             } else {
                                 echo 'Not specified';
                             }
                             ?>
-                        </p>
+                        </div>
                     </div>
                     
                     <!-- Education -->

@@ -5,6 +5,9 @@
 
 $pageTitle = "My Profile - Admin";
 
+// Include URLs first to get $ADMIN_URL
+require_once '../includes/urls.php';
+
 // Include header
 require_once '../includes/header.php';
 
@@ -17,13 +20,13 @@ try {
     $pdo = $database->getConnection();
     
     // Fetch admin info
-    $stmt = $pdo->prepare("SELECT id, name, email, role, created_at FROM users WHERE id = ? AND is_deleted = 0");
+    $stmt = $pdo->prepare("SELECT id, first_name, last_name, email, role, created_at FROM users WHERE id = ? AND is_deleted = 0");
     $stmt->execute([$_SESSION['user_id']]);
     $admin = $stmt->fetch();
     
     if (!$admin) {
         setFlash('error', 'Admin account not found');
-        redirect('admin/dashboard.php');
+        redirect($ADMIN_URL . '/dashboard.php');
     }
     
     // Fetch system statistics
@@ -35,13 +38,11 @@ try {
 } catch (PDOException $e) {
     error_log("Profile fetch error: " . $e->getMessage());
     setFlash('error', 'Failed to load profile data');
-    redirect('admin/dashboard.php');
+    redirect($ADMIN_URL . '/dashboard.php');
 }
 
 // Include navbar and sidebar
 require_once '../includes/auth.php';
-
-require_once '../includes/urls.php';
 
 // require_once '../includes/navbar.php';
 require_once '../includes/admin-sidebar.php';
@@ -91,7 +92,7 @@ require_once '../includes/admin-sidebar.php';
                     <div class="flex justify-center -mt-16">
                         <div class="h-32 w-32 bg-blue-100 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
                             <span class="text-3xl font-bold text-blue-600">
-                                <?php echo strtoupper(substr($admin['name'], 0, 2)); ?>
+                                <?php echo strtoupper(substr($admin['first_name'], 0, 1) . substr($admin['last_name'], 0, 1)); ?>
                             </span>
                         </div>
                     </div>
@@ -99,7 +100,7 @@ require_once '../includes/admin-sidebar.php';
                     <!-- Profile Info -->
                     <div class="text-center mt-6">
                         <h1 class="text-2xl font-bold text-gray-900">
-                            <?php echo htmlspecialchars($admin['name']); ?>
+                            <?php echo htmlspecialchars($admin['first_name'] . ' ' . $admin['last_name']); ?>
                         </h1>
                         
                         <div class="flex flex-wrap justify-center items-center gap-3 mt-2">
