@@ -1,3 +1,4 @@
+<?php require_once 'includes/urls.php'; ?>
 <section id="cta-banner" class="py-0">
     <!-- Bottom CTA Section -->
         <div class="relative bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600  p-12 overflow-hidden">
@@ -40,7 +41,7 @@
                 
                 <!-- CTA Buttons -->
                 <div class="flex flex-col sm:flex-row gap-6 justify-center">
-                    <a href="/apex-nexus-portal/register.php" class="group relative px-10 py-4 bg-white text-blue-600 font-bold rounded-2xl hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl hover:text-white hover:shadow-white/50 hover:border-white/100">
+                    <a href="<?php echo $BASE_URL; ?>/register.php" class="group relative px-10 py-4 bg-white text-blue-600 font-bold rounded-2xl hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl hover:text-white hover:shadow-white/50 hover:border-white/100">
                         <span class="relative z-10">Get Started Free</span>
                         <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </a>

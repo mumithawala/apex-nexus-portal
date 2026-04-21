@@ -1,5 +1,6 @@
 <?php
 $pageTitle = "Apex Nexus Recruitment - Find Top Talent";
+require_once 'includes/urls.php';
 require_once 'includes/auth.php';
 require_once 'includes/db.php';
 require_once 'includes/functions.php';
@@ -8,9 +9,9 @@ require_once 'includes/functions.php';
 if (isLoggedIn()) {
     $role = userRole();
     switch ($role) {
-        case 'admin':    header("Location: /apex-nexus-portal/admin/dashboard.php"); exit;
-        case 'company':  header("Location: /apex-nexus-portal/company/dashboard.php"); exit;
-        case 'candidate': header("Location: /apex-nexus-portal/candidate/dashboard.php"); exit;
+        case 'admin':    header("Location: " . $ADMIN_URL . "/dashboard.php"); exit;
+        case 'company':  header("Location: " . $COMPANY_URL . "/dashboard.php"); exit;
+        case 'candidate': header("Location: " . $CANDIDATE_URL . "/dashboard.php"); exit;
     }
 }
 ?>
@@ -22,7 +23,7 @@ if (isLoggedIn()) {
     <title><?php echo $pageTitle; ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/apex-nexus-portal/assets/css/landing.css">
+    <link rel="stylesheet" href="<?php echo $BASE_URL; ?>/assets/css/landing.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -149,6 +150,6 @@ if (isLoggedIn()) {
 <?php require_once 'components/cta-banner.php'; ?>
 <?php require_once 'includes/landing-footer.php'; ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
-<script src="/apex-nexus-portal/assets/js/main.js"></script>
+<script src="<?php echo $BASE_URL; ?>/assets/js/main.js"></script>
 </body>
 </html>

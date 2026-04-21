@@ -1,3 +1,4 @@
+<?php require_once 'includes/urls.php'; ?>
 <section id="about" class="bg-white py-20">
     <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- About Header -->
@@ -293,7 +294,7 @@
                 
                 <!-- Buttons -->
                 <div class="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-                    <a href="/apex-nexus-portal/register.php" class="group relative px-10 py-4 bg-white text-indigo-600 font-bold rounded-2xl hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl">
+                    <a href="<?php echo $BASE_URL; ?>/register.php" class="group relative px-10 py-4 bg-white text-indigo-600 font-bold rounded-2xl hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl">
                         <span class="relative z-10">Start Using Apex Nexus</span>
                         <div class="absolute inset-0 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </a>

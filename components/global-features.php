@@ -16,17 +16,17 @@
 
         <!-- Modern Region Tabs -->
         <div class="flex justify-center mb-10">
-            <div class="inline-flex rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
-                <button onclick="showRegion('usa')" class="region-tab px-6 py-3 text-xl font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 transform hover:scale-105" data-region="usa">
+            <div class="inline-flex rounded-xl border border-gray-200 bg-white p-1 shadow-sm w-full max-w-2xl">
+                <button onclick="showRegion('usa')" class="region-tab px-2 py-1.5 sm:px-6 sm:py-3 text-xs sm:text-xl font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 whitespace-nowrap" data-region="usa">
                     🇺🇸 USA & Americas
                 </button>
-                <button onclick="showRegion('europe')" class="region-tab px-6 py-3 text-xl font-semibold rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-300 transform hover:scale-105" data-region="europe">
+                <button onclick="showRegion('europe')" class="region-tab px-2 py-1.5 sm:px-6 sm:py-3 text-2xs sm:text-xl font-semibold rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 whitespace-nowrap" data-region="europe">
                     🇪🇺 Europe
                 </button>
-                <button onclick="showRegion('asia')" class="region-tab px-6 py-3 text-xl font-semibold rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-300 transform hover:scale-105" data-region="asia">
+                <button onclick="showRegion('asia')" class="region-tab px-2 py-1.5 sm:px-6 sm:py-3 text-2xs sm:text-xl font-semibold rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 whitespace-nowrap" data-region="asia">
                     🇦🇺 Asia Pacific
                 </button>
-                <button onclick="showRegion('global')" class="region-tab px-6 py-3 text-xl font-semibold rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-300 transform hover:scale-105" data-region="global">
+                <button onclick="showRegion('global')" class="region-tab px-2 py-1.5 sm:px-6 sm:py-3 text-2xs sm:text-xl font-semibold rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 whitespace-nowrap" data-region="global">
                     🌍 Global
                 </button>
             </div>
